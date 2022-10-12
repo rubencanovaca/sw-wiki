@@ -1,0 +1,4 @@
+/.idea
+/node_modules
+react-app-env.d.ts
+reportWebVitals.ts

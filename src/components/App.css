@@ -1,0 +1,28 @@
+.app {
+  text-align: center;
+}
+
+.app header,
+.app main,
+.app footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.app header {
+  font-size: calc(8px + 2vmin);
+  min-height: 7vmin;
+}
+
+.app main {
+  background-color: #282c34;
+  flex-direction: column;
+  min-height: calc(100vh - 10vmin);
+}
+
+.app footer {
+  font-size: calc(4px + 1vmin);
+  gap: 8px;
+  min-height: 3vmin;
+}
