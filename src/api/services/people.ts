@@ -13,11 +13,11 @@ class PeopleService {
       .then(response => response.data)
   }
 
-  /*
-  async findByName (name: string) {
-    return http.get<IPeopleData[]>(`/people/?search=${name}`)
+  async findByName (name: string = ''): Promise<any> {
+    return await http
+      .get(`/people/?search=${name}`)
+      .then(response => response.data)
   }
-  */
 }
 
 export default new PeopleService()
