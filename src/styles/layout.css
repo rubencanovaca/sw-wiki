@@ -1,0 +1,62 @@
+header,
+footer,
+main,
+main nav,
+main section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+header {
+  font-size: calc(8px + 2vmin);
+  justify-content: start;
+  min-height: calc(52px + 2vmin);
+  padding: 0 1rem;
+}
+
+main {
+  background-color: #282c34;
+  flex-direction: column;
+  min-height: calc(100vh - 52px - 6vmin);
+  padding: 4px 16px 20px;
+}
+
+main > nav {
+  border-bottom: 1px solid #2e343d;
+  box-shadow: 0 15px 20px -20px #1e2128;
+  gap: 20px;
+  height: 46px;
+  margin-bottom: 20px;
+}
+
+main > nav a {
+  font-weight: bold;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+main > nav a.active {
+  cursor: default;
+  pointer-events: none;
+}
+
+main > nav a:not(.active):hover {
+  text-decoration: underline;
+}
+
+main section {
+  flex: 1;
+  flex-direction: column;
+}
+
+main section > nav {
+  align-items: flex-end;
+  flex: 1;
+}
+
+footer {
+  font-size: calc(4px + 1vmin);
+  gap: .5rem;
+  min-height: 4vmin;
+}
