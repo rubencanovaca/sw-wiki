@@ -6,6 +6,7 @@ main section {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
 }
 
 header {
@@ -48,7 +49,6 @@ main > nav a:not(.active):hover {
 main section {
   flex: 1;
   flex-direction: column;
-  width: 100%;
 }
 
 main section > nav {
