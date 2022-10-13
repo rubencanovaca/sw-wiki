@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 
@@ -31,16 +31,37 @@ import PeopleService from '../api/services/people'
 import IPeopleData from '../api/types/IPeopleData'
 import { getIdFromEndpoint } from '../api/utils'
 
+import { UserDataContext } from '../providers/UserDataProvider'
+
 function PeopleList (): JSX.Element {
   const navigate = useNavigate()
 
   const [page, setPage] = useState(1)
+  const [items, setItems] = useState<IPeopleData[]>([])
 
   const { data, error, isError, isLoading, isFetching, isSuccess } = useQuery(
     ['people', page],
     async () => await PeopleService.getPeople(page),
-    { keepPreviousData: true, staleTime: 10000 }
+    { keepPreviousData: true, staleTime: 60000 }
   )
+
+  const { showFavourites, favourites, addFavourite, isFavourite, removeFavourite } = useContext(UserDataContext)
+
+  useEffect(() => {
+    if (showFavourites) {
+      setItems(favourites.people)
+    } else if (typeof data !== 'undefined' && data.results.length > 0) {
+      setItems(data.results)
+    }
+  }, [data, favourites, showFavourites])
+
+  function toggleFavourite (favourite: boolean, favouriteData: IPeopleData): void {
+    if (favourite && favouriteData.id !== undefined) {
+      removeFavourite('people', favouriteData.id)
+    } else if (!favourite) {
+      addFavourite('people', favouriteData)
+    }
+  }
 
   return (
     <section>
@@ -55,11 +76,12 @@ function PeopleList (): JSX.Element {
           <Link sx={{ marginLeft: 2 }} onClick={() => navigate(0)}>Reload</Link>
         </Alert>
       )}
-      {isSuccess && (
+      {isSuccess && items.length > 0 && (
         <>
           <Grid container spacing={3}>
-            {data.results.map((p: IPeopleData, i: number) => {
-              const isFavorite = false
+            {items.map((p: IPeopleData, i: number) => {
+              const id = getIdFromEndpoint(p.url)
+              const favourite = isFavourite('people', id)
               return (
                 <Grid
                   item
@@ -90,12 +112,15 @@ function PeopleList (): JSX.Element {
                       <Button
                         sx={{ marginRight: 'auto' }}
                         size="small"
-                        onClick={() => navigate(`/people/${getIdFromEndpoint(p.url)}`)}
+                        onClick={() => navigate(`/people/${id}`)}
                       >
                         See more
                       </Button>
-                      <IconButton aria-label="add to favorites">
-                        <FavoriteIcon sx={{ color: isFavorite ? red[500] : 'inherit' }}/>
+                      <IconButton
+                        aria-label={`${favourite ? 'remove' : 'add'} favorite`}
+                        onClick={() => toggleFavourite(favourite, { ...p, id })}
+                      >
+                        <FavoriteIcon sx={{ color: favourite ? red[500] : 'inherit' }}/>
                       </IconButton>
                     </CardActions>
                   </Card>
@@ -104,17 +129,20 @@ function PeopleList (): JSX.Element {
             })}
           </Grid>
           <nav>
-            <ButtonGroup variant="outlined" size="small">
-              <Button sx={{ width: '100px' }} disabled={data.previous === null} onClick={() => setPage(page - 1)}>
-                Prev Page
-              </Button>
-              <Button sx={{ width: '100px' }} disabled={data.next === null} onClick={() => setPage(page + 1)}>
-                Next Page
-              </Button>
-            </ButtonGroup>
+            {!showFavourites && (data.previous !== null || data.next !== null) && (
+              <ButtonGroup variant="outlined" size="small">
+                <Button sx={{ width: '100px' }} disabled={data.previous === null} onClick={() => setPage(page - 1)}>
+                  Prev Page
+                </Button>
+                <Button sx={{ width: '100px' }} disabled={data.next === null} onClick={() => setPage(page + 1)}>
+                  Next Page
+                </Button>
+              </ButtonGroup>
+            )}
           </nav>
         </>
       )}
+      {isSuccess && items.length === 0 && 'Nothing here!'}
     </section>
   )
 }

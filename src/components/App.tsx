@@ -1,4 +1,4 @@
-import React, { CSSProperties, useRef, useState } from 'react'
+import React, { CSSProperties, useContext, useRef, useState } from 'react'
 import { Routes, Route, Navigate, NavLink } from 'react-router-dom'
 
 import { ThemeProvider } from '@mui/material/styles'
@@ -15,6 +15,10 @@ import CloseIcon from '@mui/icons-material/Close'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import SearchIcon from '@mui/icons-material/Search'
 
+import { red } from '@mui/material/colors'
+
+import { UserDataContext } from '../providers/UserDataProvider'
+
 import theme from '../styles/theme'
 
 import PeopleList from './PeopleList'
@@ -22,9 +26,14 @@ import PeopleBio from './PeopleBio'
 
 function App (): JSX.Element {
   const inputRef = useRef<HTMLInputElement>(null)
+
   const [searchTerm, setSearchTerm] = useState<string>('')
 
-  const getNavLinkStyle = (isActive: boolean): CSSProperties => ({ color: isActive ? 'white' : theme.palette.primary.main })
+  const { showFavourites, setShowFavourites } = useContext(UserDataContext)
+
+  const getNavLinkStyle = (isActive: boolean): CSSProperties => {
+    return { color: isActive ? 'white' : theme.palette.primary.main }
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -56,9 +65,15 @@ function App (): JSX.Element {
         <IconButton type="button" aria-label="search">
           <SearchIcon/>
         </IconButton>
-        <Tooltip title="My favourites">
-          <IconButton sx={{ ml: 'auto' }} aria-label="add to favorites">
-            <FavoriteIcon sx={{ color: theme.palette.primary.main, width: '30px', height: '30px' }}/>
+        <Tooltip title={`Show ${!showFavourites ? 'favourites' : 'all items'}`} placement="left">
+          <IconButton
+            sx={{ ml: 'auto' }}
+            aria-label="go to my favourites"
+            onClick={() => setShowFavourites(!showFavourites)}
+          >
+            <FavoriteIcon
+              sx={{ color: showFavourites ? red[500] : theme.palette.primary.main, width: '30px', height: '30px' }}
+            />
           </IconButton>
         </Tooltip>
       </header>
