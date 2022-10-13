@@ -1,5 +1,6 @@
 export default interface IPeopleData {
   'name': string
+  'url': string
   'height'?: string
   'mass'?: string
   'hair_color'?: string
@@ -14,6 +15,5 @@ export default interface IPeopleData {
   'starships'?: string[]
   'created'?: string
   'edited'?: string
-  'url': string
   'id'?: string
 }
