@@ -1,5 +1,5 @@
 import React, { CSSProperties, useContext, useRef, useState } from 'react'
-import { Routes, Route, Navigate, NavLink } from 'react-router-dom'
+import { Routes, Route, Navigate, NavLink, useLocation } from 'react-router-dom'
 
 import { ThemeProvider } from '@mui/material/styles'
 
@@ -25,6 +25,8 @@ import PeopleList from './PeopleList'
 import PeopleBio from './PeopleBio'
 
 function App (): JSX.Element {
+  const location = useLocation()
+
   const inputRef = useRef<HTMLInputElement>(null)
 
   const [searchTerm, setSearchTerm] = useState<string>('')
@@ -65,17 +67,19 @@ function App (): JSX.Element {
         <IconButton type="button" aria-label="search">
           <SearchIcon/>
         </IconButton>
-        <Tooltip title={`Show ${!showFavourites ? 'favourites' : 'all items'}`} placement="left">
-          <IconButton
-            sx={{ ml: 'auto' }}
-            aria-label="go to my favourites"
-            onClick={() => setShowFavourites(!showFavourites)}
-          >
-            <FavoriteIcon
-              sx={{ color: showFavourites ? red[500] : theme.palette.primary.main, width: '30px', height: '30px' }}
-            />
-          </IconButton>
-        </Tooltip>
+        {['/people', '/planets', '/starships'].includes(location.pathname) && (
+          <Tooltip title={`Show ${!showFavourites ? 'favourites' : 'all items'}`} placement="left">
+            <IconButton
+              sx={{ ml: 'auto' }}
+              aria-label="go to my favourites"
+              onClick={() => setShowFavourites(!showFavourites)}
+            >
+              <FavoriteIcon
+                sx={{ color: showFavourites ? red[500] : theme.palette.primary.main, width: '30px', height: '30px' }}
+              />
+            </IconButton>
+          </Tooltip>
+        )}
       </header>
       <main>
         <nav>

@@ -5,7 +5,6 @@ main nav,
 main section {
   display: flex;
   align-items: center;
-  justify-content: center;
   width: 100%;
 }
 
@@ -27,6 +26,7 @@ main > nav {
   border-bottom: 1px solid #2e343d;
   box-shadow: 0 15px 20px -20px #1e2128;
   gap: 20px;
+  justify-content: center;
   height: 46px;
   margin-bottom: 20px;
 }
@@ -49,15 +49,18 @@ main > nav a:not(.active):hover {
 main section {
   flex: 1;
   flex-direction: column;
+  justify-content: flex-start;
 }
 
 main section > nav {
   align-items: flex-end;
   flex: 1;
+  justify-content: center;
 }
 
 footer {
   font-size: calc(4px + 1vmin);
   gap: .5rem;
+  justify-content: center;
   min-height: 4vmin;
 }

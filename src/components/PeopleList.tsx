@@ -42,7 +42,7 @@ function PeopleList (): JSX.Element {
   const { data, error, isError, isLoading, isFetching, isSuccess } = useQuery(
     ['people', page],
     async () => await PeopleService.getPeople(page),
-    { keepPreviousData: true, staleTime: 60000 }
+    { keepPreviousData: true, staleTime: 600000 }
   )
 
   const { showFavourites, favourites, addFavourite, isFavourite, removeFavourite } = useContext(UserDataContext)
@@ -56,9 +56,9 @@ function PeopleList (): JSX.Element {
   }, [data, favourites, showFavourites])
 
   function toggleFavourite (favourite: boolean, favouriteData: IPeopleData): void {
-    if (favourite && favouriteData.id !== undefined) {
+    if (favourite) {
       removeFavourite('people', favouriteData.id)
-    } else if (!favourite) {
+    } else {
       addFavourite('people', favouriteData)
     }
   }
