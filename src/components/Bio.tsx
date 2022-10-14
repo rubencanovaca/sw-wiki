@@ -19,7 +19,6 @@ import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
 import ListItemAvatar from '@mui/material/ListItemAvatar'
-import PersonIcon from '@mui/icons-material/Person'
 import Typography from '@mui/material/Typography'
 
 import CribIcon from '@mui/icons-material/Crib'
@@ -29,8 +28,12 @@ import FavoriteIcon from '@mui/icons-material/Favorite'
 import HeightIcon from '@mui/icons-material/Height'
 import InfoIcon from '@mui/icons-material/Info'
 import LocalAtmIcon from '@mui/icons-material/LocalAtm'
+import PersonIcon from '@mui/icons-material/Person'
+import PersonTwoToneIcon from '@mui/icons-material/PersonTwoTone'
 import PublicIcon from '@mui/icons-material/Public'
+import PublicTwoToneIcon from '@mui/icons-material/PublicTwoTone'
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch'
+import RocketLaunchTwoToneIcon from '@mui/icons-material/RocketLaunchTwoTone'
 import ScaleIcon from '@mui/icons-material/Scale'
 import SpeedIcon from '@mui/icons-material/Speed'
 import ThreeSixtyIcon from '@mui/icons-material/ThreeSixty'
@@ -142,9 +145,9 @@ function Bio (props: { type: DataType }): JSX.Element {
           <CardHeader
             avatar={
               <Avatar sx={{ width: 66, height: 66 }} variant="square">
-                {props.type === DataType.people && <PersonIcon sx={{ width: 60, height: 60 }}/>}
-                {props.type === DataType.planets && <PublicIcon sx={{ width: 60, height: 60 }}/>}
-                {props.type === DataType.starships && <RocketLaunchIcon sx={{ width: 60, height: 60 }}/>}
+                {props.type === DataType.people && <PersonTwoToneIcon sx={{ width: 60, height: 60 }}/>}
+                {props.type === DataType.planets && <PublicTwoToneIcon sx={{ width: 60, height: 60 }}/>}
+                {props.type === DataType.starships && <RocketLaunchTwoToneIcon sx={{ width: 60, height: 60 }}/>}
               </Avatar>
             }
             title={<Typography variant="h4">{data.name}</Typography>}
