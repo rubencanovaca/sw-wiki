@@ -142,7 +142,9 @@ function Bio (props: { type: DataType }): JSX.Element {
           <CardHeader
             avatar={
               <Avatar sx={{ width: 66, height: 66 }} variant="square">
-                <PersonIcon sx={{ width: 60, height: 60 }}/>
+                {props.type === DataType.people && <PersonIcon sx={{ width: 60, height: 60 }}/>}
+                {props.type === DataType.planets && <PublicIcon sx={{ width: 60, height: 60 }}/>}
+                {props.type === DataType.starships && <RocketLaunchIcon sx={{ width: 60, height: 60 }}/>}
               </Avatar>
             }
             title={<Typography variant="h4">{data.name}</Typography>}

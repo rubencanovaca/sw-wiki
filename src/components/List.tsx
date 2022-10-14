@@ -24,6 +24,8 @@ import PersonIcon from '@mui/icons-material/Person'
 import GroupsIcon from '@mui/icons-material/Groups'
 import HeightIcon from '@mui/icons-material/Height'
 import InfoIcon from '@mui/icons-material/Info'
+import PublicIcon from '@mui/icons-material/Public'
+import RocketLaunchIcon from '@mui/icons-material/RocketLaunch'
 import ScaleIcon from '@mui/icons-material/Scale'
 import SpeedIcon from '@mui/icons-material/Speed'
 import ThreeSixtyIcon from '@mui/icons-material/ThreeSixty'
@@ -129,7 +131,9 @@ function List (props: { type: DataType }): JSX.Element {
                     <CardHeader
                       avatar={
                         <Avatar sx={{ width: 46, height: 46 }} variant="square">
-                          <PersonIcon sx={{ width: 40, height: 40 }}/>
+                          {props.type === DataType.people && <PersonIcon sx={{ width: 40, height: 40 }}/>}
+                          {props.type === DataType.planets && <PublicIcon sx={{ width: 40, height: 40 }}/>}
+                          {props.type === DataType.starships && <RocketLaunchIcon sx={{ width: 40, height: 40 }}/>}
                         </Avatar>
                       }
                       title={<Typography variant="h6">{item.name}</Typography>}
