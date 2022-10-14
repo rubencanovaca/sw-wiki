@@ -1,8 +1,12 @@
 # SW Wiki
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A 'wiki' app on characters, planets, and starships using The Star Wars API ([https://swapi.dev/](https://swapi.dev/))\
+A SPA with client-side caching, state management, and favorites functionality.
 
-## Available Scripts
+#### Stack
+React + TypeScript + React Router + Axios + React Query + Material UI + Jest + ESLint.
+
+### Available Scripts
 
 In the project directory, you can run:
 
@@ -11,13 +15,11 @@ In the project directory, you can run:
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+The page will reload if you make edits.
 
 ### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Launches the test runner in the interactive watch mode.
 
 ### `npm run build`
 
@@ -27,19 +29,15 @@ It correctly bundles React in production mode and optimizes the build for the be
 The build is minified and the filenames include the hashes.\
 Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
 ### `npm run lint`
 
-Launches the ESLint check
-
+Launches the ESLint check.
 
 ### `npm run lint:fix`
 
-Launches the ESLint check and tries to fix errors
+Launches the ESLint check and tries to fix errors.
 
-## Learn More
+## TODO:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+- Add greater coverage with unit tests
+- Make data persistent in the browser (LocalStorage)
