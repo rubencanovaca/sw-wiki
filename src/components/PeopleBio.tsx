@@ -33,10 +33,10 @@ import WcIcon from '@mui/icons-material/Wc'
 import { red } from '@mui/material/colors'
 
 import PeopleService from '../api/services/people'
-import IPeopleData from '../api/types/IPeopleData'
+import IPeopleData from '../types/IPeopleData'
+import { getIdFromEndpoint } from '../api/utils'
 
 import { UserDataContext } from '../providers/UserDataProvider'
-import { getIdFromEndpoint } from '../api/utils'
 
 function PeopleBio (): JSX.Element {
   const params = useParams()

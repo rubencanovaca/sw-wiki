@@ -1,8 +1,8 @@
 import React, { createContext, useState } from 'react'
 
-import IPeopleData from '../api/types/IPeopleData'
-import IPlanetsData from '../api/types/IPlanetsData'
-import IStarshipsData from '../api/types/IStarshipsData'
+import IPeopleData from '../types/IPeopleData'
+import IPlanetsData from '../types/IPlanetsData'
+import IStarshipsData from '../types/IStarshipsData'
 
 interface IFavourites {
   people: IPeopleData[]
