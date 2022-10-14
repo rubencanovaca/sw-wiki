@@ -1,5 +1,6 @@
 import React, { createContext, useState } from 'react'
 
+import { DataType } from '../types/DataType'
 import IPeopleData from '../types/IPeopleData'
 import IPlanetsData from '../types/IPlanetsData'
 import IStarshipsData from '../types/IStarshipsData'
@@ -14,9 +15,9 @@ interface IUserDataContextProps {
   showFavourites: boolean
   setShowFavourites: (show: boolean) => void
   favourites: IFavourites
-  addFavourite: (type: 'people' | 'planets' | 'starships', favourite: IPeopleData | IPlanetsData | IStarshipsData) => void
-  isFavourite: (type: 'people' | 'planets' | 'starships', id?: string) => boolean
-  removeFavourite: (type: 'people' | 'planets' | 'starships', id?: string) => void
+  addFavourite: (type: DataType, favourite: IPeopleData | IPlanetsData | IStarshipsData) => void
+  isFavourite: (type: DataType, id?: string) => boolean
+  removeFavourite: (type: DataType, id?: string) => void
 }
 
 interface IUserDataProviderProps {
@@ -39,16 +40,16 @@ export function UserDataProvider (props: IUserDataProviderProps): JSX.Element {
   const [showFavourites, setShowFavourites] = useState<boolean>(false)
   const [favourites, setFavourites] = useState<IFavourites>({ people: [], planets: [], starships: [] })
 
-  function addFavourite (type: 'people' | 'planets' | 'starships', favourite: IPeopleData | IPlanetsData | IStarshipsData): void {
+  function addFavourite (type: DataType, favourite: IPeopleData | IPlanetsData | IStarshipsData): void {
     setFavourites({ ...favourites, [type]: [...favourites.people, favourite] })
   }
 
-  function isFavourite (type: 'people' | 'planets' | 'starships', id?: string): boolean {
+  function isFavourite (type: DataType, id?: string): boolean {
     const favouriteIndex = favourites[type].findIndex(f => f.id === id)
     return favouriteIndex > -1
   }
 
-  function removeFavourite (type: 'people' | 'planets' | 'starships', id?: string): void {
+  function removeFavourite (type: DataType, id?: string): void {
     setFavourites({ ...favourites, [type]: favourites.people.filter(f => f.id !== id) })
   }
 
