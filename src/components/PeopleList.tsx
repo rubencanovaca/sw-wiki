@@ -31,7 +31,7 @@ import PeopleService from '../api/services/people'
 import IPeopleData from '../types/IPeopleData'
 import { getIdFromEndpoint } from '../api/utils'
 
-import { UserDataContext } from '../providers/UserDataProvider'
+import { LocalDataContext } from '../providers/LocalDataProvider'
 
 function PeopleList (): JSX.Element {
   const navigate = useNavigate()
@@ -45,7 +45,7 @@ function PeopleList (): JSX.Element {
     { keepPreviousData: true, staleTime: 600000 }
   )
 
-  const { showFavourites, favourites, addFavourite, isFavourite, removeFavourite } = useContext(UserDataContext)
+  const { showFavourites, favourites, addFavourite, isFavourite, removeFavourite } = useContext(LocalDataContext)
 
   useEffect(() => {
     if (showFavourites) {

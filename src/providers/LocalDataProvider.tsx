@@ -5,26 +5,26 @@ import IPeopleData from '../types/IPeopleData'
 import IPlanetsData from '../types/IPlanetsData'
 import IStarshipsData from '../types/IStarshipsData'
 
-interface IFavourites {
+interface IFavouritesData {
   people: IPeopleData[]
   planets: IPlanetsData[]
   starships: IStarshipsData[]
 }
 
-interface IUserDataContextProps {
+interface ILocalDataContextProps {
   showFavourites: boolean
   setShowFavourites: (show: boolean) => void
-  favourites: IFavourites
+  favourites: IFavouritesData
   addFavourite: (type: DataType, favourite: IPeopleData | IPlanetsData | IStarshipsData) => void
   isFavourite: (type: DataType, id?: string) => boolean
   removeFavourite: (type: DataType, id?: string) => void
 }
 
-interface IUserDataProviderProps {
+interface ILocalDataProviderProps {
   children?: any
 }
 
-export const UserDataContext = createContext<IUserDataContextProps>({
+export const LocalDataContext = createContext<ILocalDataContextProps>({
   showFavourites: false,
   setShowFavourites: () => {
   },
@@ -36,9 +36,9 @@ export const UserDataContext = createContext<IUserDataContextProps>({
   }
 })
 
-export function UserDataProvider (props: IUserDataProviderProps): JSX.Element {
+export function LocalDataProvider (props: ILocalDataProviderProps): JSX.Element {
   const [showFavourites, setShowFavourites] = useState<boolean>(false)
-  const [favourites, setFavourites] = useState<IFavourites>({ people: [], planets: [], starships: [] })
+  const [favourites, setFavourites] = useState<IFavouritesData>({ people: [], planets: [], starships: [] })
 
   function addFavourite (type: DataType, favourite: IPeopleData | IPlanetsData | IStarshipsData): void {
     setFavourites({ ...favourites, [type]: [...favourites.people, favourite] })
@@ -54,7 +54,7 @@ export function UserDataProvider (props: IUserDataProviderProps): JSX.Element {
   }
 
   return (
-    <UserDataContext.Provider
+    <LocalDataContext.Provider
       value={{
         showFavourites,
         setShowFavourites,
@@ -65,6 +65,6 @@ export function UserDataProvider (props: IUserDataProviderProps): JSX.Element {
       }}
     >
       {props.children}
-    </UserDataContext.Provider>
+    </LocalDataContext.Provider>
   )
 }

@@ -17,7 +17,7 @@ import SearchIcon from '@mui/icons-material/Search'
 
 import { red } from '@mui/material/colors'
 
-import { UserDataContext } from '../providers/UserDataProvider'
+import { LocalDataContext } from '../providers/LocalDataProvider'
 
 import theme from '../styles/theme'
 
@@ -31,7 +31,7 @@ function App (): JSX.Element {
 
   const [searchTerm, setSearchTerm] = useState<string>('')
 
-  const { showFavourites, setShowFavourites } = useContext(UserDataContext)
+  const { showFavourites, setShowFavourites } = useContext(LocalDataContext)
 
   const getNavLinkStyle = (isActive: boolean): CSSProperties => {
     return { color: isActive ? 'white' : theme.palette.primary.main }

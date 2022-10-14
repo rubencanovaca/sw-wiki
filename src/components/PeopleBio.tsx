@@ -36,7 +36,7 @@ import PeopleService from '../api/services/people'
 import IPeopleData from '../types/IPeopleData'
 import { getIdFromEndpoint } from '../api/utils'
 
-import { UserDataContext } from '../providers/UserDataProvider'
+import { LocalDataContext } from '../providers/LocalDataProvider'
 
 function PeopleBio (): JSX.Element {
   const params = useParams()
@@ -48,7 +48,7 @@ function PeopleBio (): JSX.Element {
     { keepPreviousData: true, staleTime: 600000 }
   )
 
-  const { addFavourite, isFavourite, removeFavourite } = useContext(UserDataContext)
+  const { addFavourite, isFavourite, removeFavourite } = useContext(LocalDataContext)
 
   const favourite = isFavourite('people', params.peopleId)
 
