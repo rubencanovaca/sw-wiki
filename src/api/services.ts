@@ -1,4 +1,4 @@
-import http from '../http-common'
+import http from './http-common'
 
 class PeopleService {
   async getPeople (page: number = 0): Promise<any> {

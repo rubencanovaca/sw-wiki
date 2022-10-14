@@ -27,9 +27,10 @@ import WcIcon from '@mui/icons-material/Wc'
 
 import { red } from '@mui/material/colors'
 
-import PeopleService from '../api/services/people'
-import IPeopleData from '../types/IPeopleData'
+import PeopleService from '../api/services'
 import { getIdFromEndpoint } from '../api/utils'
+
+import IPeopleData from '../types/IPeopleData'
 
 import { LocalDataContext } from '../providers/LocalDataProvider'
 
