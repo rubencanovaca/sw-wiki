@@ -1,4 +1,4 @@
-import React, { CSSProperties, useContext, useRef, useState } from 'react'
+import React, { CSSProperties, Fragment, useContext, useRef, useState } from 'react'
 import { Routes, Route, Navigate, NavLink, useLocation } from 'react-router-dom'
 
 import { ThemeProvider } from '@mui/material/styles'
@@ -23,6 +23,8 @@ import theme from '../styles/theme'
 
 import PeopleList from './PeopleList'
 import PeopleBio from './PeopleBio'
+
+import DataType from '../types/DataType'
 
 function App (): JSX.Element {
   const location = useLocation()
@@ -67,7 +69,7 @@ function App (): JSX.Element {
         <IconButton type="button" aria-label="search">
           <SearchIcon/>
         </IconButton>
-        {['/people', '/planets', '/starships'].includes(location.pathname) && (
+        {Object.values(DataType).map(type => `/${type}`).includes(location.pathname) && (
           <Tooltip title={`Show ${!showFavourites ? 'favourites' : 'all items'}`} placement="left">
             <IconButton
               sx={{ ml: 'auto' }}
@@ -83,20 +85,20 @@ function App (): JSX.Element {
       </header>
       <main>
         <nav>
-          <NavLink to={'/people'} end style={({ isActive }) => getNavLinkStyle(isActive)}>
-            People
-          </NavLink>
-          <NavLink to={'/planets'} end style={({ isActive }) => getNavLinkStyle(isActive)}>
-            Planets
-          </NavLink>
-          <NavLink to={'/starships'} end style={({ isActive }) => getNavLinkStyle(isActive)}>
-            Starships
-          </NavLink>
+          {Object.values(DataType).map(type => (
+            <NavLink key={type} to={`/${type}`} end style={({ isActive }) => getNavLinkStyle(isActive)}>
+              {type}
+            </NavLink>
+          ))}
         </nav>
         <Routes>
-          <Route path="/" element={<Navigate to="/people" replace/>}/>
-          <Route path="/people" element={<PeopleList/>}/>
-          <Route path="/people/:peopleId" element={<PeopleBio/>}/>
+          <Route key="home" path="/" element={<Navigate to={`/${DataType.people}`} replace/>}/>
+          {Object.values(DataType).map(type => (
+            <Fragment key={type}>
+              <Route path={`/${type}`} element={<PeopleList/>}/>
+              <Route path={`/${type}/:${type}Id`} element={<PeopleBio/>}/>
+            </Fragment>
+          ))}
           <Route path="*" element={<section>Nothing here!</section>}/>
         </Routes>
       </main>

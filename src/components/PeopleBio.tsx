@@ -38,26 +38,27 @@ import { getIdFromEndpoint } from '../api/utils'
 import IPeopleData from '../types/IPeopleData'
 
 import { LocalDataContext } from '../providers/LocalDataProvider'
+import DataType from '../types/DataType'
 
 function PeopleBio (): JSX.Element {
   const params = useParams()
   const navigate = useNavigate()
 
   const { data, error, isError, isLoading, isFetching, isSuccess } = useQuery(
-    ['people', params.peopleId],
+    [DataType.people, params.peopleId],
     async () => await PeopleService.get(params.peopleId),
     { keepPreviousData: true, staleTime: 600000 }
   )
 
   const { addFavourite, isFavourite, removeFavourite } = useContext(LocalDataContext)
 
-  const favourite = isFavourite('people', params.peopleId)
+  const favourite = isFavourite(DataType.people, params.peopleId)
 
   function toggleFavourite (favourite: boolean, favouriteData: IPeopleData): void {
     if (favourite) {
-      removeFavourite('people', favouriteData.id)
+      removeFavourite(DataType.people, favouriteData.id)
     } else {
-      addFavourite('people', favouriteData)
+      addFavourite(DataType.people, favouriteData)
     }
   }
 

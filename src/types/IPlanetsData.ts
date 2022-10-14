@@ -1,4 +1,4 @@
-export default interface IPlanetsData {
+interface IPlanetsData {
   'name': string
   'url': string
   'rotation_period': string
@@ -15,3 +15,5 @@ export default interface IPlanetsData {
   'edited': string
   'id'?: string
 }
+
+export default IPlanetsData

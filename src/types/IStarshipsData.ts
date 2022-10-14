@@ -1,4 +1,4 @@
-export default interface IStarshipsData {
+interface IStarshipsData {
   'name': string
   'url': string
   'model'?: string
@@ -19,3 +19,5 @@ export default interface IStarshipsData {
   'edited'?: string
   'id'?: string
 }
+
+export default IStarshipsData

@@ -1,6 +1,6 @@
 import React, { createContext, useState } from 'react'
 
-import { DataType } from '../types/DataType'
+import DataType from '../types/DataType'
 import IPeopleData from '../types/IPeopleData'
 import IPlanetsData from '../types/IPlanetsData'
 import IStarshipsData from '../types/IStarshipsData'

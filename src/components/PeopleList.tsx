@@ -30,9 +30,10 @@ import { red } from '@mui/material/colors'
 import PeopleService from '../api/services'
 import { getIdFromEndpoint } from '../api/utils'
 
-import IPeopleData from '../types/IPeopleData'
-
 import { LocalDataContext } from '../providers/LocalDataProvider'
+
+import DataType from '../types/DataType'
+import IPeopleData from '../types/IPeopleData'
 
 function PeopleList (): JSX.Element {
   const navigate = useNavigate()
@@ -41,7 +42,7 @@ function PeopleList (): JSX.Element {
   const [items, setItems] = useState<IPeopleData[]>([])
 
   const { data, error, isError, isLoading, isFetching, isSuccess } = useQuery(
-    ['people', page],
+    [DataType.people, page],
     async () => await PeopleService.getPeople(page),
     { keepPreviousData: true, staleTime: 600000 }
   )
@@ -58,9 +59,9 @@ function PeopleList (): JSX.Element {
 
   function toggleFavourite (favourite: boolean, favouriteData: IPeopleData): void {
     if (favourite) {
-      removeFavourite('people', favouriteData.id)
+      removeFavourite(DataType.people, favouriteData.id)
     } else {
-      addFavourite('people', favouriteData)
+      addFavourite(DataType.people, favouriteData)
     }
   }
 
@@ -82,7 +83,7 @@ function PeopleList (): JSX.Element {
           <Grid container spacing={3}>
             {items.map((p: IPeopleData, i: number) => {
               const id = getIdFromEndpoint(p.url)
-              const favourite = isFavourite('people', id)
+              const favourite = isFavourite(DataType.people, id)
               return (
                 <Grid
                   item

@@ -1,4 +1,4 @@
-export default interface IPeopleData {
+interface IPeopleData {
   'name': string
   'url': string
   'height'?: string
@@ -17,3 +17,5 @@ export default interface IPeopleData {
   'edited'?: string
   'id'?: string
 }
+
+export default IPeopleData
