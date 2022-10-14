@@ -1,6 +1,7 @@
 import React, { createContext, useState } from 'react'
 
 import DataType from '../types/DataType'
+import IPage from '../types/IPage'
 import IPeopleData from '../types/IPeopleData'
 import IPlanetsData from '../types/IPlanetsData'
 import IStarshipsData from '../types/IStarshipsData'
@@ -13,8 +14,8 @@ interface IFavouritesData {
 }
 
 interface ILocalDataContextProps {
-  page: { people: number, planets: number, starships: number }
-  setPage: (page: { people: number, planets: number, starships: number }) => void
+  page: IPage
+  setPage: (page: IPage) => void
   showFavourites: boolean
   setShowFavourites: (show: boolean) => void
   favourites: IFavouritesData
@@ -28,7 +29,11 @@ interface ILocalDataProviderProps {
 }
 
 export const LocalDataContext = createContext<ILocalDataContextProps>({
-  page: { people: 1, planets: 1, starships: 1 },
+  page: {
+    people: { list: 1, search: 1 },
+    planets: { list: 1, search: 1 },
+    starships: { list: 1, search: 1 }
+  },
   setPage: () => {},
   showFavourites: false,
   setShowFavourites: () => {},
@@ -39,9 +44,11 @@ export const LocalDataContext = createContext<ILocalDataContextProps>({
 })
 
 export function LocalDataProvider (props: ILocalDataProviderProps): JSX.Element {
-  const [page, setPage] = useState<{ people: number, planets: number, starships: number }>(
-    { people: 1, planets: 1, starships: 1 }
-  )
+  const [page, setPage] = useState<IPage>({
+    people: { list: 1, search: 1 },
+    planets: { list: 1, search: 1 },
+    starships: { list: 1, search: 1 }
+  })
   const [showFavourites, setShowFavourites] = useState<boolean>(false)
   const [favourites, setFavourites] = useState<IFavouritesData>({ people: [], planets: [], starships: [] })
 

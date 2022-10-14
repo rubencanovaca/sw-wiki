@@ -109,13 +109,13 @@ function Bio (props: { type: DataType }): JSX.Element {
   const params = useParams()
   const navigate = useNavigate()
 
+  const { addFavourite, isFavourite, removeFavourite } = useContext(LocalDataContext)
+
   const { data, error, isError, isLoading, isFetching, isSuccess } = useQuery(
     [props.type, params[`${props.type}Id`]],
     async () => await Service.get(props.type, params[`${props.type}Id`]),
     { keepPreviousData: true, staleTime: 600000 }
   )
-
-  const { addFavourite, isFavourite, removeFavourite } = useContext(LocalDataContext)
 
   const favourite = isFavourite(props.type, params[`${props.type}Id`])
 

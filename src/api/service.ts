@@ -3,7 +3,7 @@ import http from './http-common'
 import DataType from '../types/DataType'
 
 class Service {
-  async getAll (type: DataType, page: number = 0): Promise<any> {
+  async getAll (type: DataType, page: number = 1): Promise<any> {
     return await http
       .get(`/${type}/?page=${page}`)
       .then(response => response.data)
@@ -15,9 +15,9 @@ class Service {
       .then(response => response.data)
   }
 
-  async findByName (type: DataType, name: string = ''): Promise<any> {
+  async findByName (type: DataType, page: number = 1, name: string = ''): Promise<any> {
     return await http
-      .get(`/${type}/?search=${name}`)
+      .get(`/${type}/?page=${page}&search=${name}`)
       .then(response => response.data)
   }
 }

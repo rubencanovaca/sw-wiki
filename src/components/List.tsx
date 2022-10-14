@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 
 import Alert from '@mui/material/Alert'
@@ -62,6 +62,8 @@ const CardContentChips = function (props: { chips: Array<{ icon: any, label: str
 
 function List (props: { type: DataType }): JSX.Element {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const search = searchParams.get('search') ?? ''
 
   const {
     page,
@@ -72,15 +74,19 @@ function List (props: { type: DataType }): JSX.Element {
     isFavourite,
     removeFavourite
   } = useContext(LocalDataContext)
-  const currentPage = page[props.type]
 
-  const [items, setItems] = useState<ItemDataType[]>([])
+  const currentPageType = isSearchMode() ? 'search' : 'list'
+  const currentPage = page[props.type][currentPageType]
 
   const { data, error, isError, isLoading, isFetching, isSuccess } = useQuery(
-    [props.type, currentPage],
-    async () => await Service.getAll(props.type, currentPage),
+    [`${props.type}${isSearchMode() ? `/search=${search?.toLowerCase()}` : ''}`, currentPage],
+    isSearchMode()
+      ? async () => await Service.findByName(props.type, currentPage, search)
+      : async () => await Service.getAll(props.type, currentPage),
     { keepPreviousData: true, staleTime: 600000 }
   )
+
+  const [items, setItems] = useState<ItemDataType[]>([])
 
   useEffect(() => {
     if (showFavourites) {
@@ -89,6 +95,14 @@ function List (props: { type: DataType }): JSX.Element {
       setItems(data.results)
     }
   }, [data, favourites, showFavourites])
+
+  function isSearchMode (): boolean {
+    return search !== ''
+  }
+
+  function filterFn (f: ItemDataType): boolean {
+    return !isSearchMode() || f.name.toLowerCase().includes(search)
+  }
 
   function toggleFavourite (favourite: boolean, favouriteData: ItemDataType): void {
     if (favourite) {
@@ -111,10 +125,10 @@ function List (props: { type: DataType }): JSX.Element {
           <Link sx={{ marginLeft: 'auto' }} onClick={() => navigate(0)}>Reload</Link>
         </Alert>
       )}
-      {isSuccess && items.length > 0 && (
+      {isSuccess && items.filter(filterFn).length > 0 && (
         <>
           <Grid container spacing={3}>
-            {items.map((item: ItemDataType, i: number) => {
+            {items.filter(filterFn).map((item: ItemDataType, i: number) => {
               const id = getIdFromEndpoint(item.url)
               const favourite = isFavourite(props.type, id)
               return (
@@ -194,14 +208,18 @@ function List (props: { type: DataType }): JSX.Element {
                 <Button
                   sx={{ width: '100px' }}
                   disabled={data.previous === null}
-                  onClick={() => setPage({ ...page, [props.type]: currentPage - 1 })}
+                  onClick={() => {
+                    setPage({ ...page, [props.type]: { ...page[props.type], [currentPageType]: currentPage - 1 } })
+                  }}
                 >
                   Prev Page
                 </Button>
                 <Button
                   sx={{ width: '100px' }}
                   disabled={data.next === null}
-                  onClick={() => setPage({ ...page, [props.type]: currentPage + 1 })}
+                  onClick={() => {
+                    setPage({ ...page, [props.type]: { ...page[props.type], [currentPageType]: currentPage + 1 } })
+                  }}
                 >
                   Next Page
                 </Button>
@@ -210,7 +228,7 @@ function List (props: { type: DataType }): JSX.Element {
           </nav>
         </>
       )}
-      {isSuccess && items.length === 0 && 'Nothing here!'}
+      {isSuccess && items.filter(filterFn).length === 0 && 'Nothing here!'}
     </section>
   )
 }
