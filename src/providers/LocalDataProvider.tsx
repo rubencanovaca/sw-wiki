@@ -4,6 +4,7 @@ import DataType from '../types/DataType'
 import IPeopleData from '../types/IPeopleData'
 import IPlanetsData from '../types/IPlanetsData'
 import IStarshipsData from '../types/IStarshipsData'
+import ItemDataType from '../types/ItemDataType'
 
 interface IFavouritesData {
   people: IPeopleData[]
@@ -12,10 +13,12 @@ interface IFavouritesData {
 }
 
 interface ILocalDataContextProps {
+  page: { people: number, planets: number, starships: number }
+  setPage: (page: { people: number, planets: number, starships: number }) => void
   showFavourites: boolean
   setShowFavourites: (show: boolean) => void
   favourites: IFavouritesData
-  addFavourite: (type: DataType, favourite: IPeopleData | IPlanetsData | IStarshipsData) => void
+  addFavourite: (type: DataType, favourite: ItemDataType) => void
   isFavourite: (type: DataType, id?: string) => boolean
   removeFavourite: (type: DataType, id?: string) => void
 }
@@ -25,37 +28,42 @@ interface ILocalDataProviderProps {
 }
 
 export const LocalDataContext = createContext<ILocalDataContextProps>({
+  page: { people: 1, planets: 1, starships: 1 },
+  setPage: () => {},
   showFavourites: false,
-  setShowFavourites: () => {
-  },
+  setShowFavourites: () => {},
   favourites: { people: [], planets: [], starships: [] },
-  addFavourite: () => {
-  },
+  addFavourite: () => {},
   isFavourite: () => false,
-  removeFavourite: () => {
-  }
+  removeFavourite: () => {}
 })
 
 export function LocalDataProvider (props: ILocalDataProviderProps): JSX.Element {
+  const [page, setPage] = useState<{ people: number, planets: number, starships: number }>(
+    { people: 1, planets: 1, starships: 1 }
+  )
   const [showFavourites, setShowFavourites] = useState<boolean>(false)
   const [favourites, setFavourites] = useState<IFavouritesData>({ people: [], planets: [], starships: [] })
 
-  function addFavourite (type: DataType, favourite: IPeopleData | IPlanetsData | IStarshipsData): void {
-    setFavourites({ ...favourites, [type]: [...favourites.people, favourite] })
+  function addFavourite (type: DataType, favourite: ItemDataType): void {
+    setFavourites({ ...favourites, [type]: [...favourites[type], favourite] })
   }
 
   function isFavourite (type: DataType, id?: string): boolean {
-    const favouriteIndex = favourites[type].findIndex(f => f.id === id)
-    return favouriteIndex > -1
+    const index = favourites[type].findIndex(f => f.id === id)
+    return index > -1
   }
 
   function removeFavourite (type: DataType, id?: string): void {
-    setFavourites({ ...favourites, [type]: favourites.people.filter(f => f.id !== id) })
+    const index = favourites[type].findIndex(f => f.id === id)
+    setFavourites({ ...favourites, [type]: [...favourites[type].slice(0, index), ...favourites[type].slice(index + 1)] })
   }
 
   return (
     <LocalDataContext.Provider
       value={{
+        page,
+        setPage,
         showFavourites,
         setShowFavourites,
         favourites,

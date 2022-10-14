@@ -38,6 +38,14 @@ export default createTheme({
     }
   },
   components: {
+    MuiAlert: {
+      styleOverrides: {
+        message: {
+          display: 'flex',
+          width: '100%'
+        }
+      }
+    },
     MuiInputBase: {
       styleOverrides: {
         root: getMediaQueryCSSValues('fontSize', ['.8rem', '1rem', '1.25rem', '1.5rem', '2rem'])
@@ -46,6 +54,13 @@ export default createTheme({
     MuiLink: {
       defaultProps: {
         underline: 'hover'
+      }
+    },
+    MuiListItemText: {
+      styleOverrides: {
+        root: {
+          textTransform: 'capitalize'
+        }
       }
     }
   },

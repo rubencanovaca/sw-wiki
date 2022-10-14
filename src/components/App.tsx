@@ -21,8 +21,8 @@ import { LocalDataContext } from '../providers/LocalDataProvider'
 
 import theme from '../styles/theme'
 
-import PeopleList from './PeopleList'
-import PeopleBio from './PeopleBio'
+import List from './List'
+import Bio from './Bio'
 
 import DataType from '../types/DataType'
 
@@ -95,8 +95,8 @@ function App (): JSX.Element {
           <Route key="home" path="/" element={<Navigate to={`/${DataType.people}`} replace/>}/>
           {Object.values(DataType).map(type => (
             <Fragment key={type}>
-              <Route path={`/${type}`} element={<PeopleList/>}/>
-              <Route path={`/${type}/:${type}Id`} element={<PeopleBio/>}/>
+              <Route path={`/${type}`} element={<List type={type}/>}/>
+              <Route path={`/${type}/:${type}Id`} element={<Bio type={type}/>}/>
             </Fragment>
           ))}
           <Route path="*" element={<section>Nothing here!</section>}/>

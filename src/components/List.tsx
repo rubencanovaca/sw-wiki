@@ -21,47 +21,78 @@ import Typography from '@mui/material/Typography'
 
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import PersonIcon from '@mui/icons-material/Person'
+import GroupsIcon from '@mui/icons-material/Groups'
 import HeightIcon from '@mui/icons-material/Height'
+import InfoIcon from '@mui/icons-material/Info'
 import ScaleIcon from '@mui/icons-material/Scale'
+import SpeedIcon from '@mui/icons-material/Speed'
+import ThreeSixtyIcon from '@mui/icons-material/ThreeSixty'
 import WcIcon from '@mui/icons-material/Wc'
 
 import { red } from '@mui/material/colors'
 
-import PeopleService from '../api/services'
+import Service from '../api/service'
 import { getIdFromEndpoint } from '../api/utils'
 
 import { LocalDataContext } from '../providers/LocalDataProvider'
 
 import DataType from '../types/DataType'
+import ItemDataType from '../types/ItemDataType'
 import IPeopleData from '../types/IPeopleData'
+import IPlanetsData from '../types/IPlanetsData'
+import IStarshipsData from '../types/IStarshipsData'
 
-function PeopleList (): JSX.Element {
+const CardContentChips = function (props: { chips: Array<{ icon: any, label: string }> }): JSX.Element {
+  return (
+    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+      {props.chips.map((chip, c) => (
+        <Chip
+          key={c}
+          sx={{ maxWidth: '160px', padding: '2px', textTransform: 'capitalize' }}
+          size="small"
+          icon={chip.icon}
+          label={chip.label}
+        />
+      ))}
+    </Box>
+  )
+}
+
+function List (props: { type: DataType }): JSX.Element {
   const navigate = useNavigate()
 
-  const [page, setPage] = useState(1)
-  const [items, setItems] = useState<IPeopleData[]>([])
+  const {
+    page,
+    setPage,
+    showFavourites,
+    favourites,
+    addFavourite,
+    isFavourite,
+    removeFavourite
+  } = useContext(LocalDataContext)
+  const currentPage = page[props.type]
+
+  const [items, setItems] = useState<ItemDataType[]>([])
 
   const { data, error, isError, isLoading, isFetching, isSuccess } = useQuery(
-    [DataType.people, page],
-    async () => await PeopleService.getPeople(page),
+    [props.type, currentPage],
+    async () => await Service.getAll(props.type, currentPage),
     { keepPreviousData: true, staleTime: 600000 }
   )
 
-  const { showFavourites, favourites, addFavourite, isFavourite, removeFavourite } = useContext(LocalDataContext)
-
   useEffect(() => {
     if (showFavourites) {
-      setItems(favourites.people)
+      setItems(favourites[props.type])
     } else if (typeof data !== 'undefined' && data.results.length > 0) {
       setItems(data.results)
     }
   }, [data, favourites, showFavourites])
 
-  function toggleFavourite (favourite: boolean, favouriteData: IPeopleData): void {
+  function toggleFavourite (favourite: boolean, favouriteData: ItemDataType): void {
     if (favourite) {
-      removeFavourite(DataType.people, favouriteData.id)
+      removeFavourite(props.type, favouriteData.id)
     } else {
-      addFavourite(DataType.people, favouriteData)
+      addFavourite(props.type, favouriteData)
     }
   }
 
@@ -75,15 +106,15 @@ function PeopleList (): JSX.Element {
       {isError && (
         <Alert sx={{ width: '100%' }} severity="error">
           Error: {(error as Error).message}
-          <Link sx={{ marginLeft: 2 }} onClick={() => navigate(0)}>Reload</Link>
+          <Link sx={{ marginLeft: 'auto' }} onClick={() => navigate(0)}>Reload</Link>
         </Alert>
       )}
       {isSuccess && items.length > 0 && (
         <>
           <Grid container spacing={3}>
-            {items.map((p: IPeopleData, i: number) => {
-              const id = getIdFromEndpoint(p.url)
-              const favourite = isFavourite(DataType.people, id)
+            {items.map((item: ItemDataType, i: number) => {
+              const id = getIdFromEndpoint(item.url)
+              const favourite = isFavourite(props.type, id)
               return (
                 <Grid
                   item
@@ -101,26 +132,49 @@ function PeopleList (): JSX.Element {
                           <PersonIcon sx={{ width: 40, height: 40 }}/>
                         </Avatar>
                       }
-                      title={<Typography variant="h6">{p.name}</Typography>}
+                      title={<Typography variant="h6">{item.name}</Typography>}
                     />
                     <CardContent sx={{ paddingTop: 0, paddingBottom: 0 }}>
-                      <Box sx={{ display: 'flex', gap: 1 }}>
-                        <Chip sx={{ padding: '2px' }} size="small" icon={<WcIcon/>} label={p.gender}/>
-                        <Chip sx={{ padding: '2px' }} size="small" icon={<HeightIcon/>} label={p.height}/>
-                        <Chip sx={{ padding: '2px' }} size="small" icon={<ScaleIcon/>} label={p.mass}/>
-                      </Box>
+                      {props.type === DataType.people && (
+                        <CardContentChips
+                          chips={[
+                            { icon: <WcIcon/>, label: (item as IPeopleData).gender },
+                            { icon: <HeightIcon/>, label: (item as IPeopleData).height },
+                            { icon: <ScaleIcon/>, label: (item as IPeopleData).mass }
+                          ]}
+                        />
+                      )}
+                      {props.type === DataType.planets && (
+                        <CardContentChips
+                          chips={[
+                            { icon: <GroupsIcon/>, label: (item as IPlanetsData).population },
+                            {
+                              icon: <ThreeSixtyIcon/>,
+                              label: `${(item as IPlanetsData).rotation_period}h /${(item as IPlanetsData).orbital_period}d`
+                            }
+                          ]}
+                        />
+                      )}
+                      {props.type === DataType.starships && (
+                        <CardContentChips
+                          chips={[
+                            { icon: <InfoIcon/>, label: (item as IStarshipsData).starship_class },
+                            { icon: <SpeedIcon/>, label: (item as IStarshipsData).max_atmosphering_speed }
+                          ]}
+                        />
+                      )}
                     </CardContent>
                     <CardActions sx={{ margin: '0 4px' }}>
                       <Button
                         sx={{ marginRight: 'auto' }}
                         size="small"
-                        onClick={() => navigate(`/people/${id}`)}
+                        onClick={() => navigate(`/${props.type}/${id}`)}
                       >
                         See more
                       </Button>
                       <IconButton
                         aria-label={`${favourite ? 'remove' : 'add'} favorite`}
-                        onClick={() => toggleFavourite(favourite, { ...p, id })}
+                        onClick={() => toggleFavourite(favourite, { ...item, id })}
                       >
                         <FavoriteIcon sx={{ color: favourite ? red[500] : 'inherit' }}/>
                       </IconButton>
@@ -133,10 +187,18 @@ function PeopleList (): JSX.Element {
           <nav>
             {!showFavourites && (data.previous !== null || data.next !== null) && (
               <ButtonGroup variant="outlined" size="small">
-                <Button sx={{ width: '100px' }} disabled={data.previous === null} onClick={() => setPage(page - 1)}>
+                <Button
+                  sx={{ width: '100px' }}
+                  disabled={data.previous === null}
+                  onClick={() => setPage({ ...page, [props.type]: currentPage - 1 })}
+                >
                   Prev Page
                 </Button>
-                <Button sx={{ width: '100px' }} disabled={data.next === null} onClick={() => setPage(page + 1)}>
+                <Button
+                  sx={{ width: '100px' }}
+                  disabled={data.next === null}
+                  onClick={() => setPage({ ...page, [props.type]: currentPage + 1 })}
+                >
                   Next Page
                 </Button>
               </ButtonGroup>
@@ -149,4 +211,4 @@ function PeopleList (): JSX.Element {
   )
 }
 
-export default PeopleList
+export default List
