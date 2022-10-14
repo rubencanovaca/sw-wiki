@@ -60,6 +60,7 @@ main section > nav {
   align-items: flex-end;
   flex: 1;
   justify-content: center;
+  padding-top: 26px;
 }
 
 footer {
