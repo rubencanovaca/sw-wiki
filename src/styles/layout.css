@@ -1,7 +1,6 @@
 #root {
   display: flex;
   flex-direction: column;
-  height: 100vh;
   min-width: 400px;
 }
 
@@ -32,8 +31,8 @@ header {
 main {
   background-color: #282c34;
   flex-direction: column;
+  min-height: calc(100vh - 52px - 10vmin);
   padding: 4px 16px 20px;
-  height: 1032px;
 }
 
 main > nav {
@@ -79,6 +78,6 @@ footer {
   font-size: calc(4px + 1vmin);
   gap: .5rem;
   justify-content: center;
-  min-height: 5vmin;
-  padding-bottom: 1vmin;
+  min-height: 6vmin;
+  padding: 1vmin 0;
 }
