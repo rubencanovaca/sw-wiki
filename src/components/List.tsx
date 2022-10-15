@@ -132,15 +132,7 @@ function List (props: { type: DataType }): JSX.Element {
               const id = getIdFromEndpoint(item.url)
               const favourite = isFavourite(props.type, id)
               return (
-                <Grid
-                  item
-                  key={i}
-                  xs={12}
-                  sm={6}
-                  md={4}
-                  lg={3}
-                  xl={2}
-                >
+                <Grid item key={i} xs={12} sm={6}>
                   <Card>
                     <CardHeader
                       avatar={

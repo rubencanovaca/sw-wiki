@@ -1,4 +1,7 @@
-body {
+#root {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
   min-width: 400px;
 }
 
@@ -12,6 +15,13 @@ main section {
   width: 100%;
 }
 
+header,
+main,
+footer {
+  margin: 0 auto;
+  max-width: 899px;
+}
+
 header {
   font-size: calc(8px + 2vmin);
   justify-content: start;
@@ -22,7 +32,6 @@ header {
 main {
   background-color: #282c34;
   flex-direction: column;
-  min-height: calc(100vh - 52px - 6vmin);
   padding: 4px 16px 20px;
 }
 
@@ -64,8 +73,11 @@ main section > nav {
 }
 
 footer {
+  align-items: flex-end;
+  flex: 1;
   font-size: calc(4px + 1vmin);
   gap: .5rem;
   justify-content: center;
-  min-height: 4vmin;
+  min-height: 5vmin;
+  padding-bottom: 1vmin;
 }

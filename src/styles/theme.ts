@@ -9,21 +9,22 @@ enum Breakpoint {
 }
 
 const getMediaQueryCSSValues = (property: string, value: [string, string?, string?, string?, string?]): any => {
+  const breakpoints: number[] = Object.keys(Breakpoint).reduce((acc: any[], curr, index, arr) => {
+    if (index < arr.length / 2) acc.push(parseInt(curr))
+    return acc
+  }, [])
   const mediaQueryCSSValues: any = {
     [property]: value[0]
   }
-  if (value[1] !== '') {
-    mediaQueryCSSValues[`@media (min-width: ${Breakpoint.sm}px) and (max-width: ${Breakpoint.md - 1}px)`] = { [property]: value[1] }
-  }
-  if (value[2] !== '') {
-    mediaQueryCSSValues[`@media (min-width: ${Breakpoint.md}px) and (max-width: ${Breakpoint.lg - 1}px)`] = { [property]: value[2] }
-  }
-  if (value[3] !== '') {
-    mediaQueryCSSValues[`@media (min-width: ${Breakpoint.lg}px) and (max-width: ${Breakpoint.xl - 1}px)`] = { [property]: value[3] }
-  }
-  if (value[4] !== '') {
-    mediaQueryCSSValues[`@media (min-width: ${Breakpoint.xl}px)`] = { [property]: value[4] }
-  }
+  value.forEach((val, v) => {
+    const currenBreakpoint = breakpoints[v]
+    if (v > 0 && v < value.length - 1) {
+      const nextBreakpoint = breakpoints[v + 1]
+      mediaQueryCSSValues[`@media (min-width: ${currenBreakpoint}px) and (max-width: ${nextBreakpoint - 1}px)`] = { [property]: val }
+    } else if (v === value.length - 1) {
+      mediaQueryCSSValues[`@media (min-width: ${currenBreakpoint}px)`] = { [property]: val }
+    }
+  })
   return mediaQueryCSSValues
 }
 
@@ -48,7 +49,7 @@ export default createTheme({
     },
     MuiInputBase: {
       styleOverrides: {
-        root: getMediaQueryCSSValues('fontSize', ['.8rem', '1rem', '1.25rem', '1.5rem', '2rem'])
+        root: getMediaQueryCSSValues('fontSize', ['.8rem', '1rem'])
       }
     },
     MuiLink: {
@@ -68,6 +69,6 @@ export default createTheme({
     mode: 'dark'
   },
   typography: {
-    h1: getMediaQueryCSSValues('fontSize', ['1.5rem', '1.75rem', '2rem', '2.5rem', '3rem'])
+    h1: getMediaQueryCSSValues('fontSize', ['1.5rem', '2rem'])
   }
 })
