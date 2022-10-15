@@ -87,7 +87,7 @@ const CardContentList = function (props: { items: Array<{ type: DataType, icon: 
                       {item.ids?.map((id: string, u: number) => (
                         <Link
                           key={u}
-                          sx={{ cursor: 'pointer' }}
+                          sx={{ cursor: 'pointer', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
                           onClick={() => navigate(`/${item.type}/${id}`)}
                         >
                           {`${window.origin}/${item.type}/${id}`}
