@@ -58,7 +58,7 @@ export default createTheme({
     },
     MuiListItemText: {
       styleOverrides: {
-        root: {
+        primary: {
           textTransform: 'capitalize'
         }
       }

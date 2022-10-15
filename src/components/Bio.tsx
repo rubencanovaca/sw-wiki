@@ -90,7 +90,7 @@ const CardContentList = function (props: { items: Array<{ type: DataType, icon: 
                           sx={{ cursor: 'pointer' }}
                           onClick={() => navigate(`/${item.type}/${id}`)}
                         >
-                          {`/${item.type}/${id}`}
+                          {`${window.origin}/${item.type}/${id}`}
                         </Link>
                       ))}
                     </Box>
