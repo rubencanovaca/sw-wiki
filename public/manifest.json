@@ -13,9 +13,9 @@
       "sizes": "192x192"
     },
     {
-      "src": "logo200.png",
+      "src": "logo250.png",
       "type": "image/png",
-      "sizes": "200x200"
+      "sizes": "250x250"
     },
     {
       "src": "logo512.png",
@@ -26,5 +26,5 @@
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "background_color": "#282c34"
 }
