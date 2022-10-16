@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 
 import Alert from '@mui/material/Alert'
@@ -63,8 +63,7 @@ const CardContentChips = function (props: { chips: Array<{ icon: any, label: str
 
 function List (props: { type: DataType }): JSX.Element {
   const navigate = useNavigate()
-  const [searchParams, setSearchParams] = useSearchParams()
-  const search = searchParams.get('search') ?? ''
+  const { searchParam, setSearchParam } = useContext(LocalDataContext)
 
   const {
     page,
@@ -81,9 +80,9 @@ function List (props: { type: DataType }): JSX.Element {
   const currentPage = page[props.type][currentPageType]
 
   const { data, error, isError, isLoading, isFetching, isSuccess } = useQuery(
-    [`${props.type}${isSearchMode() ? `/search=${search?.toLowerCase()}` : ''}`, currentPage],
+    [`${props.type}${isSearchMode() ? `/search=${searchParam?.toLowerCase()}` : ''}`, currentPage],
     isSearchMode()
-      ? async () => await Service.findByName(props.type, currentPage, search)
+      ? async () => await Service.findByName(props.type, currentPage, searchParam)
       : async () => await Service.getAll(props.type, currentPage),
     { keepPreviousData: true, staleTime: 600000 }
   )
@@ -93,17 +92,17 @@ function List (props: { type: DataType }): JSX.Element {
   useEffect(() => {
     if (showFavourites) {
       setItems(favourites[props.type])
-    } else if (typeof data !== 'undefined' && data.results.length > 0) {
+    } else if (typeof data !== 'undefined') {
       setItems(data.results)
     }
-  }, [data, favourites, showFavourites])
+  }, [data, favourites, showFavourites, page])
 
   function isSearchMode (): boolean {
-    return search !== ''
+    return searchParam !== ''
   }
 
   function filterFn (f: ItemDataType): boolean {
-    return showFavourites ? f.name.toLowerCase().includes(search) : true
+    return showFavourites ? f.name.toLowerCase().includes(searchParam) : true
   }
 
   function toggleFavourite (favourite: boolean, favouriteData: ItemDataType): void {
@@ -145,11 +144,11 @@ function List (props: { type: DataType }): JSX.Element {
             )}
             {isSearchMode() && (
               <Chip
-                label={search}
+                label={searchParam}
                 size="small"
                 color="primary"
                 icon={<SearchIcon/>}
-                onDelete={() => setSearchParams('')}
+                onDelete={() => setSearchParam('')}
               />
             )}
           </fieldset>
@@ -205,7 +204,7 @@ function List (props: { type: DataType }): JSX.Element {
                         <Button
                           sx={{ marginRight: 'auto' }}
                           size="small"
-                          onClick={() => navigate(`/${props.type}/${id}${search !== '' ? `?search=${search}` : ''}`)}
+                          onClick={() => navigate(`/${props.type}/${id}`)}
                         >
                           See more
                         </Button>

@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 
 import Alert from '@mui/material/Alert'
@@ -69,8 +69,6 @@ const CardContentChips = function (props: { chips: Array<{ icon: any, label: str
 
 const CardContentList = function (props: { items: Array<{ type: DataType, icon: any, ids: string[] }> }): JSX.Element {
   const navigate = useNavigate()
-  const [searchParams] = useSearchParams()
-  const search = searchParams.get('search') ?? ''
   return (
     <>
       {props.items.some(item => item.ids?.length > 0) && props.items.map((item, i) => (
@@ -90,7 +88,7 @@ const CardContentList = function (props: { items: Array<{ type: DataType, icon: 
                         <Link
                           key={u}
                           sx={{ cursor: 'pointer', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
-                          onClick={() => navigate(`/${item.type}/${id}${search !== '' ? `?search=${search}` : ''}`)}
+                          onClick={() => navigate(`/${item.type}/${id}`)}
                         >
                           {`${window.origin}/${item.type}/${id}`}
                         </Link>

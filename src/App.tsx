@@ -1,5 +1,5 @@
 import React, { CSSProperties, Fragment, useContext, useRef, useState } from 'react'
-import { Routes, Route, Navigate, NavLink, useLocation, useSearchParams } from 'react-router-dom'
+import { Routes, Route, Navigate, NavLink, useLocation } from 'react-router-dom'
 
 import { ThemeProvider } from '@mui/material/styles'
 
@@ -28,14 +28,12 @@ import DataType from './types/DataType'
 
 function App (): JSX.Element {
   const location = useLocation()
-  const [searchParams, setSearchParams] = useSearchParams()
-  const search = searchParams.get('search') ?? ''
 
-  const { showFavourites, setShowFavourites } = useContext(LocalDataContext)
+  const { searchParam, setSearchParam, showFavourites, setShowFavourites } = useContext(LocalDataContext)
 
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const [searchText, setSearchText] = useState<string>(search)
+  const [searchText, setSearchText] = useState<string>(searchParam)
 
   function getNavLinkStyle (isActive: boolean): CSSProperties {
     return { color: isActive ? 'white' : theme.palette.primary.main }
@@ -74,7 +72,7 @@ function App (): JSX.Element {
               type="button"
               aria-label="search"
               onClick={() => {
-                setSearchParams(searchText !== '' ? { search: searchText } : {})
+                setSearchParam(searchText)
               }}
             >
               <SearchIcon/>
@@ -100,7 +98,7 @@ function App (): JSX.Element {
               key={type}
               style={({ isActive }) => getNavLinkStyle(isActive)}
               end
-              to={`/${type}${search !== '' ? `?search=${search}` : ''}`}
+              to={`/${type}`}
             >
               {type}
             </NavLink>

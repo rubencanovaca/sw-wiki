@@ -16,6 +16,8 @@ interface IFavouritesData {
 interface ILocalDataContextProps {
   page: IPage
   setPage: (page: IPage) => void
+  searchParam: string
+  setSearchParam: (param: string) => void
   showFavourites: boolean
   setShowFavourites: (show: boolean) => void
   favourites: IFavouritesData
@@ -35,6 +37,8 @@ export const LocalDataContext = createContext<ILocalDataContextProps>({
     starships: { list: 1, search: 1 }
   },
   setPage: () => {},
+  searchParam: '',
+  setSearchParam: () => {},
   showFavourites: false,
   setShowFavourites: () => {},
   favourites: { people: [], planets: [], starships: [] },
@@ -49,6 +53,7 @@ export function LocalDataProvider (props: ILocalDataProviderProps): JSX.Element 
     planets: { list: 1, search: 1 },
     starships: { list: 1, search: 1 }
   })
+  const [searchParam, setSearchParam] = useState<string>('')
   const [showFavourites, setShowFavourites] = useState<boolean>(false)
   const [favourites, setFavourites] = useState<IFavouritesData>({ people: [], planets: [], starships: [] })
 
@@ -71,6 +76,8 @@ export function LocalDataProvider (props: ILocalDataProviderProps): JSX.Element 
       value={{
         page,
         setPage,
+        searchParam,
+        setSearchParam,
         showFavourites,
         setShowFavourites,
         favourites,
