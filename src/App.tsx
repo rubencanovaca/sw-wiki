@@ -17,14 +17,14 @@ import SearchIcon from '@mui/icons-material/Search'
 
 import { red } from '@mui/material/colors'
 
-import { LocalDataContext } from '../providers/LocalDataProvider'
+import { LocalDataContext } from './providers/LocalDataProvider'
 
-import theme from '../styles/theme'
+import theme from './styles/theme'
 
-import List from './List'
-import Bio from './Bio'
+import List from './components/List'
+import Bio from './components/Bio'
 
-import DataType from '../types/DataType'
+import DataType from './types/DataType'
 
 function App (): JSX.Element {
   const location = useLocation()

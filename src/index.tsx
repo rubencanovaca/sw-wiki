@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 import { LocalDataProvider } from './providers/LocalDataProvider'
 import reportWebVitals from './reportWebVitals'
-import App from './components/App'
+import App from './App'
 import './styles'
 
 const queryClient = new QueryClient()

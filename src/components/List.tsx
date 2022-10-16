@@ -27,6 +27,7 @@ import InfoIcon from '@mui/icons-material/Info'
 import PublicIcon from '@mui/icons-material/Public'
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch'
 import ScaleIcon from '@mui/icons-material/Scale'
+import SearchIcon from '@mui/icons-material/Search'
 import SpeedIcon from '@mui/icons-material/Speed'
 import ThreeSixtyIcon from '@mui/icons-material/ThreeSixty'
 import WcIcon from '@mui/icons-material/Wc'
@@ -62,13 +63,14 @@ const CardContentChips = function (props: { chips: Array<{ icon: any, label: str
 
 function List (props: { type: DataType }): JSX.Element {
   const navigate = useNavigate()
-  const [searchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams()
   const search = searchParams.get('search') ?? ''
 
   const {
     page,
     setPage,
     showFavourites,
+    setShowFavourites,
     favourites,
     addFavourite,
     isFavourite,
@@ -101,7 +103,7 @@ function List (props: { type: DataType }): JSX.Element {
   }
 
   function filterFn (f: ItemDataType): boolean {
-    return !isSearchMode() || f.name.toLowerCase().includes(search)
+    return showFavourites ? f.name.toLowerCase().includes(search) : true
   }
 
   function toggleFavourite (favourite: boolean, favouriteData: ItemDataType): void {
@@ -125,75 +127,101 @@ function List (props: { type: DataType }): JSX.Element {
           <Link sx={{ marginLeft: 'auto' }} onClick={() => navigate(0)}>Reload</Link>
         </Alert>
       )}
-      {isSuccess && items.filter(filterFn).length > 0 && (
+      {isSuccess && (
         <>
-          <Grid container spacing={3}>
-            {items.filter(filterFn).map((item: ItemDataType, i: number) => {
-              const id = getIdFromEndpoint(item.url)
-              const favourite = isFavourite(props.type, id)
-              return (
-                <Grid item key={i} xs={12} sm={6}>
-                  <Card>
-                    <CardHeader
-                      avatar={
-                        <Avatar sx={{ width: 46, height: 46 }} variant="square">
-                          {props.type === DataType.people && <PersonIcon sx={{ width: 40, height: 40 }}/>}
-                          {props.type === DataType.planets && <PublicIcon sx={{ width: 40, height: 40 }}/>}
-                          {props.type === DataType.starships && <RocketLaunchIcon sx={{ width: 40, height: 40 }}/>}
-                        </Avatar>
-                      }
-                      title={<Typography variant="h6">{item.name}</Typography>}
-                    />
-                    <CardContent sx={{ paddingTop: 0, paddingBottom: 0 }}>
-                      {props.type === DataType.people && (
-                        <CardContentChips
-                          chips={[
-                            { icon: <WcIcon/>, label: (item as IPeopleData).gender },
-                            { icon: <HeightIcon/>, label: (item as IPeopleData).height },
-                            { icon: <ScaleIcon/>, label: (item as IPeopleData).mass }
-                          ]}
-                        />
-                      )}
-                      {props.type === DataType.planets && (
-                        <CardContentChips
-                          chips={[
-                            { icon: <GroupsIcon/>, label: (item as IPlanetsData).population },
-                            {
-                              icon: <ThreeSixtyIcon/>,
-                              label: `${(item as IPlanetsData).rotation_period}h /${(item as IPlanetsData).orbital_period}d`
-                            }
-                          ]}
-                        />
-                      )}
-                      {props.type === DataType.starships && (
-                        <CardContentChips
-                          chips={[
-                            { icon: <InfoIcon/>, label: (item as IStarshipsData).starship_class },
-                            { icon: <SpeedIcon/>, label: (item as IStarshipsData).max_atmosphering_speed }
-                          ]}
-                        />
-                      )}
-                    </CardContent>
-                    <CardActions sx={{ margin: '0 4px' }}>
-                      <Button
-                        sx={{ marginRight: 'auto' }}
-                        size="small"
-                        onClick={() => navigate(`/${props.type}/${id}`)}
-                      >
-                        See more
-                      </Button>
-                      <IconButton
-                        aria-label={`${favourite ? 'remove' : 'add'} favorite`}
-                        onClick={() => toggleFavourite(favourite, { ...item, id })}
-                      >
-                        <FavoriteIcon sx={{ color: favourite ? red[500] : 'inherit' }}/>
-                      </IconButton>
-                    </CardActions>
-                  </Card>
-                </Grid>
-              )
-            })}
-          </Grid>
+          <fieldset>
+            <Typography sx={{ display: 'inline' }} variant="h6">
+              {showFavourites ? items.filter(filterFn).length : data.count}
+              {` item${(showFavourites ? items.filter(filterFn).length : data.count) !== 1 ? 's' : ''}`}
+            </Typography>
+            {showFavourites && (
+              <Chip
+                label="Favourites"
+                size="small"
+                color="primary"
+                icon={<FavoriteIcon/>}
+                onDelete={() => setShowFavourites(false)}
+              />
+            )}
+            {isSearchMode() && (
+              <Chip
+                label={search}
+                size="small"
+                color="primary"
+                icon={<SearchIcon/>}
+                onDelete={() => setSearchParams('')}
+              />
+            )}
+          </fieldset>
+          {items.filter(filterFn).length > 0 && (
+            <Grid container spacing={3}>
+              {items.filter(filterFn).map((item: ItemDataType, i: number) => {
+                const id = getIdFromEndpoint(item.url)
+                const favourite = isFavourite(props.type, id)
+                return (
+                  <Grid item key={i} xs={12} sm={6}>
+                    <Card>
+                      <CardHeader
+                        avatar={
+                          <Avatar sx={{ width: 46, height: 46 }} variant="square">
+                            {props.type === DataType.people && <PersonIcon sx={{ width: 40, height: 40 }}/>}
+                            {props.type === DataType.planets && <PublicIcon sx={{ width: 40, height: 40 }}/>}
+                            {props.type === DataType.starships && <RocketLaunchIcon sx={{ width: 40, height: 40 }}/>}
+                          </Avatar>
+                        }
+                        title={<Typography variant="h6">{item.name}</Typography>}
+                      />
+                      <CardContent sx={{ paddingTop: 0, paddingBottom: 0 }}>
+                        {props.type === DataType.people && (
+                          <CardContentChips
+                            chips={[
+                              { icon: <WcIcon/>, label: (item as IPeopleData).gender },
+                              { icon: <HeightIcon/>, label: (item as IPeopleData).height },
+                              { icon: <ScaleIcon/>, label: (item as IPeopleData).mass }
+                            ]}
+                          />
+                        )}
+                        {props.type === DataType.planets && (
+                          <CardContentChips
+                            chips={[
+                              { icon: <GroupsIcon/>, label: (item as IPlanetsData).population },
+                              {
+                                icon: <ThreeSixtyIcon/>,
+                                label: `${(item as IPlanetsData).rotation_period}h /${(item as IPlanetsData).orbital_period}d`
+                              }
+                            ]}
+                          />
+                        )}
+                        {props.type === DataType.starships && (
+                          <CardContentChips
+                            chips={[
+                              { icon: <InfoIcon/>, label: (item as IStarshipsData).starship_class },
+                              { icon: <SpeedIcon/>, label: (item as IStarshipsData).max_atmosphering_speed }
+                            ]}
+                          />
+                        )}
+                      </CardContent>
+                      <CardActions sx={{ margin: '0 4px' }}>
+                        <Button
+                          sx={{ marginRight: 'auto' }}
+                          size="small"
+                          onClick={() => navigate(`/${props.type}/${id}${search !== '' ? `?search=${search}` : ''}`)}
+                        >
+                          See more
+                        </Button>
+                        <IconButton
+                          aria-label={`${favourite ? 'remove' : 'add'} favorite`}
+                          onClick={() => toggleFavourite(favourite, { ...item, id })}
+                        >
+                          <FavoriteIcon sx={{ color: favourite ? red[500] : 'inherit' }}/>
+                        </IconButton>
+                      </CardActions>
+                    </Card>
+                  </Grid>
+                )
+              })}
+            </Grid>
+          )}
           <nav>
             {!showFavourites && (data.previous !== null || data.next !== null) && (
               <ButtonGroup variant="outlined" size="small">
