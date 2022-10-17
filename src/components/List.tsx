@@ -113,6 +113,17 @@ function List (props: { type: DataType }): JSX.Element {
     }
   }
 
+  function getCurrentPageItemsText (): string {
+    const startNumber: number = (currentPage * 10) - 9
+    const endNumber: number = Math.min(currentPage * 10, data.count)
+    return `${startNumber}${startNumber !== endNumber ? `-${endNumber}` : ''} of `
+  }
+
+  function getTotalItemsText (): string {
+    const number: number = showFavourites ? items.filter(filterFn).length : data.count
+    return `${number} item${number !== 1 ? 's' : ''}`
+  }
+
   return (
     <section>
       {(isLoading || isFetching) && (
@@ -129,14 +140,9 @@ function List (props: { type: DataType }): JSX.Element {
       {isSuccess && (
         <>
           <fieldset>
-            <Typography sx={{ display: 'inline' }} variant="h6">
-              {showFavourites ? items.filter(filterFn).length : data.count}
-              {` item${(showFavourites ? items.filter(filterFn).length : data.count) !== 1 ? 's' : ''}`}
-            </Typography>
             {showFavourites && (
               <Chip
                 label="Favourites"
-                size="small"
                 color="primary"
                 icon={<FavoriteIcon/>}
                 onDelete={() => setShowFavourites(false)}
@@ -145,14 +151,13 @@ function List (props: { type: DataType }): JSX.Element {
             {isSearchMode() && (
               <Chip
                 label={searchParam}
-                size="small"
                 color="primary"
                 icon={<SearchIcon/>}
                 onDelete={() => setSearchParam('')}
               />
             )}
           </fieldset>
-          {items.filter(filterFn).length > 0 && (
+          {!isLoading && !isFetching && items.filter(filterFn).length > 0 && (
             <Grid container spacing={3}>
               {items.filter(filterFn).map((item: ItemDataType, i: number) => {
                 const id = getIdFromEndpoint(item.url)
@@ -222,6 +227,10 @@ function List (props: { type: DataType }): JSX.Element {
             </Grid>
           )}
           <nav>
+            <Typography sx={{ display: 'inline', marginRight: 'auto' }} variant="subtitle1">
+              {(!showFavourites && (data.previous !== null || data.next !== null)) && getCurrentPageItemsText()}
+              <b>{getTotalItemsText()}</b>
+            </Typography>
             {!showFavourites && (data.previous !== null || data.next !== null) && (
               <ButtonGroup variant="outlined" size="small">
                 <Button
@@ -247,7 +256,6 @@ function List (props: { type: DataType }): JSX.Element {
           </nav>
         </>
       )}
-      {isSuccess && items.filter(filterFn).length === 0 && 'Nothing here!'}
     </section>
   )
 }

@@ -29,7 +29,7 @@ import DataType from './types/DataType'
 function App (): JSX.Element {
   const location = useLocation()
 
-  const { searchParam, setSearchParam, showFavourites, setShowFavourites } = useContext(LocalDataContext)
+  const { page, setPage, searchParam, setSearchParam, showFavourites, setShowFavourites } = useContext(LocalDataContext)
 
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -37,6 +37,16 @@ function App (): JSX.Element {
 
   function getNavLinkStyle (isActive: boolean): CSSProperties {
     return { color: isActive ? 'white' : theme.palette.primary.main }
+  }
+
+  function onSearchParam (): void {
+    setPage({
+      ...page,
+      people: { ...page.people, search: 1 },
+      planets: { ...page.people, search: 1 },
+      starships: { ...page.people, search: 1 }
+    })
+    setSearchParam(searchText)
   }
 
   return (
@@ -54,6 +64,9 @@ function App (): JSX.Element {
                 placeholder="Search"
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') onSearchParam()
+                }}
               />
               <IconButton
                 sx={{ ml: 1, visibility: searchText !== '' ? 'visible' : 'hidden' }}
@@ -71,9 +84,7 @@ function App (): JSX.Element {
             <IconButton
               type="button"
               aria-label="search"
-              onClick={() => {
-                setSearchParam(searchText)
-              }}
+              onClick={() => onSearchParam()}
             >
               <SearchIcon/>
             </IconButton>
