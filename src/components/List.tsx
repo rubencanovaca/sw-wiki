@@ -102,7 +102,7 @@ function List (props: { type: DataType }): JSX.Element {
   }
 
   function filterFn (f: ItemDataType): boolean {
-    return showFavourites ? f.name.toLowerCase().includes(searchParam) : true
+    return showFavourites ? f.name.toLowerCase().includes(searchParam.toLowerCase()) : true
   }
 
   function toggleFavourite (favourite: boolean, favouriteData: ItemDataType): void {
