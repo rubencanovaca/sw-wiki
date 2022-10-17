@@ -139,24 +139,26 @@ function List (props: { type: DataType }): JSX.Element {
       )}
       {isSuccess && (
         <>
-          <fieldset>
-            {showFavourites && (
-              <Chip
-                label="Favourites"
-                color="primary"
-                icon={<FavoriteIcon/>}
-                onDelete={() => setShowFavourites(false)}
-              />
-            )}
-            {isSearchMode() && (
-              <Chip
-                label={searchParam}
-                color="primary"
-                icon={<SearchIcon/>}
-                onDelete={() => setSearchParam('')}
-              />
-            )}
-          </fieldset>
+          {(showFavourites || isSearchMode()) && (
+            <fieldset>
+              {showFavourites && (
+                <Chip
+                  label="Favourites"
+                  color="primary"
+                  icon={<FavoriteIcon/>}
+                  onDelete={() => setShowFavourites(false)}
+                />
+              )}
+              {isSearchMode() && (
+                <Chip
+                  label={searchParam}
+                  color="primary"
+                  icon={<SearchIcon/>}
+                  onDelete={() => setSearchParam('')}
+                />
+              )}
+            </fieldset>
+          )}
           {!isLoading && !isFetching && items.filter(filterFn).length > 0 && (
             <Grid container spacing={3}>
               {items.filter(filterFn).map((item: ItemDataType, i: number) => {
