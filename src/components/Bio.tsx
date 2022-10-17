@@ -24,6 +24,7 @@ import Typography from '@mui/material/Typography'
 import CribIcon from '@mui/icons-material/Crib'
 import GroupsIcon from '@mui/icons-material/Groups'
 import FactoryIcon from '@mui/icons-material/Factory'
+import Fade from '@mui/material/Fade'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import HeightIcon from '@mui/icons-material/Height'
 import InfoIcon from '@mui/icons-material/Info'
@@ -35,6 +36,7 @@ import PublicTwoToneIcon from '@mui/icons-material/PublicTwoTone'
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch'
 import RocketLaunchTwoToneIcon from '@mui/icons-material/RocketLaunchTwoTone'
 import ScaleIcon from '@mui/icons-material/Scale'
+import Skeleton from '@mui/material/Skeleton'
 import SpeedIcon from '@mui/icons-material/Speed'
 import ThreeSixtyIcon from '@mui/icons-material/ThreeSixty'
 import WcIcon from '@mui/icons-material/Wc'
@@ -67,12 +69,30 @@ const CardContentChips = function (props: { chips: Array<{ icon: any, label: str
   )
 }
 
-const CardContentList = function (props: { items: Array<{ type: DataType, icon: any, ids: string[] }> }): JSX.Element {
+const ListItemLink = function (props: { type: DataType, id: string }): JSX.Element {
   const navigate = useNavigate()
+
+  const { data, isSuccess } = useQuery(
+    [props.type, props.id],
+    async () => await Service.get(props.type, props.id),
+    { keepPreviousData: true, staleTime: 600000 }
+  )
+
+  return (
+    <Link
+      sx={{ cursor: 'pointer', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+      onClick={() => navigate(`/${props.type}/${props.id}`)}
+    >
+      {isSuccess ? data.name : <Skeleton variant="text" animation="wave" width={210}/>}
+    </Link>
+  )
+}
+
+const CardContentList = function (props: { items: Array<{ type: DataType, icon: any, ids: string[] }> }): JSX.Element {
   return (
     <>
       {props.items.some(item => item.ids?.length > 0) && props.items.map((item, i) => (
-        <List key={i} sx={{ width: '100%', bgcolor: 'background.paper' }}>
+        <List key={i} sx={{ bgcolor: 'background.paper', width: '100%' }}>
           {item.ids?.length > 0 && (
             <>
               {i !== 0 && <Divider sx={{ margin: '6px 0' }}/>}
@@ -84,14 +104,8 @@ const CardContentList = function (props: { items: Array<{ type: DataType, icon: 
                   primary={item.type}
                   secondary={(
                     <Box component="span" sx={{ display: 'flex', flexDirection: 'column' }}>
-                      {item.ids?.map((id: string, u: number) => (
-                        <Link
-                          key={u}
-                          sx={{ cursor: 'pointer', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
-                          onClick={() => navigate(`/${item.type}/${id}`)}
-                        >
-                          {`${window.origin}/${item.type}/${id}`}
-                        </Link>
+                      {item.ids?.map((id: string, i: number) => (
+                        <ListItemLink key={i} type={item.type} id={id}/>
                       ))}
                     </Box>
                   )}
@@ -141,99 +155,101 @@ function Bio (props: { type: DataType }): JSX.Element {
         </Alert>
       )}
       {isSuccess && (
-        <Card sx={{ alignSelf: 'start', width: '100%' }}>
-          <CardHeader
-            avatar={
-              <Avatar sx={{ width: 66, height: 66 }} variant="square">
-                {props.type === DataType.people && <PersonTwoToneIcon sx={{ width: 60, height: 60 }}/>}
-                {props.type === DataType.planets && <PublicTwoToneIcon sx={{ width: 60, height: 60 }}/>}
-                {props.type === DataType.starships && <RocketLaunchTwoToneIcon sx={{ width: 60, height: 60 }}/>}
-              </Avatar>
-            }
-            title={<Typography variant="h4">{data.name}</Typography>}
-          />
-          <CardContent>
-            {props.type === DataType.people && (
-              <>
-                <CardContentChips
-                  chips={[
-                    { icon: <WcIcon/>, label: (data as IPeopleData).gender },
-                    { icon: <HeightIcon/>, label: (data as IPeopleData).height },
-                    { icon: <ScaleIcon/>, label: (data as IPeopleData).mass },
-                    { icon: <CribIcon/>, label: (data as IPeopleData).birth_year }
-                  ]}
-                />
-                <CardContentList
-                  items={[
-                    {
-                      type: DataType.planets,
-                      icon: <PublicIcon/>,
-                      ids: [getIdFromEndpoint(data.homeworld)]
-                    },
-                    {
-                      type: DataType.starships,
-                      icon: <RocketLaunchIcon/>,
-                      ids: data.starships?.map((starship: string) => getIdFromEndpoint(starship))
-                    }
-                  ]}
-                />
-              </>
-            )}
-            {props.type === DataType.planets && (
-              <>
-                <CardContentChips
-                  chips={[
-                    { icon: <GroupsIcon/>, label: (data as IPlanetsData).population },
-                    {
-                      icon: <ThreeSixtyIcon/>,
-                      label: `${(data as IPlanetsData).rotation_period}h / ${(data as IPlanetsData).orbital_period}d`
-                    }
-                  ]}
-                />
-                <CardContentList
-                  items={[
-                    {
-                      type: DataType.people,
-                      icon: <GroupsIcon/>,
-                      ids: data.residents?.map((resident: string) => getIdFromEndpoint(resident))
-                    }
-                  ]}
-                />
-              </>
-            )}
-            {props.type === DataType.starships && (
-              <>
-                <CardContentChips
-                  chips={[
-                    { icon: <InfoIcon/>, label: (data as IStarshipsData).starship_class },
-                    { icon: <FactoryIcon/>, label: (data as IStarshipsData).manufacturer },
-                    { icon: <SpeedIcon/>, label: (data as IStarshipsData).max_atmosphering_speed },
-                    { icon: <LocalAtmIcon/>, label: (data as IStarshipsData).cost_in_credits }
-                  ]}
-                />
-                <CardContentList
-                  items={[
-                    {
-                      type: DataType.people,
-                      icon: <PersonIcon/>,
-                      ids: data.pilots?.map((pilot: string) => getIdFromEndpoint(pilot))
-                    }
-                  ]}
-                />
-              </>
-            )}
-          </CardContent>
-          <CardActions>
-            <IconButton
-              sx={{ marginLeft: 'auto' }}
-              size="large"
-              aria-label={`${favourite ? 'remove' : 'add'} favorite`}
-              onClick={() => toggleFavourite(favourite, { ...data, id: params[`${props.type}Id`] })}
-            >
-              <FavoriteIcon sx={{ color: favourite ? red[500] : 'inherit' }}/>
-            </IconButton>
-          </CardActions>
-        </Card>
+        <Fade in={!isLoading}>
+          <Card sx={{ alignSelf: 'start', width: '100%' }}>
+            <CardHeader
+              avatar={
+                <Avatar sx={{ width: 66, height: 66 }} variant="square">
+                  {props.type === DataType.people && <PersonTwoToneIcon sx={{ width: 60, height: 60 }}/>}
+                  {props.type === DataType.planets && <PublicTwoToneIcon sx={{ width: 60, height: 60 }}/>}
+                  {props.type === DataType.starships && <RocketLaunchTwoToneIcon sx={{ width: 60, height: 60 }}/>}
+                </Avatar>
+              }
+              title={<Typography variant="h4">{data.name}</Typography>}
+            />
+            <CardContent>
+              {props.type === DataType.people && (
+                <>
+                  <CardContentChips
+                    chips={[
+                      { icon: <WcIcon/>, label: (data as IPeopleData).gender },
+                      { icon: <HeightIcon/>, label: (data as IPeopleData).height },
+                      { icon: <ScaleIcon/>, label: (data as IPeopleData).mass },
+                      { icon: <CribIcon/>, label: (data as IPeopleData).birth_year }
+                    ]}
+                  />
+                  <CardContentList
+                    items={[
+                      {
+                        type: DataType.planets,
+                        icon: <PublicIcon/>,
+                        ids: [getIdFromEndpoint(data.homeworld)]
+                      },
+                      {
+                        type: DataType.starships,
+                        icon: <RocketLaunchIcon/>,
+                        ids: data.starships?.map((starship: string) => getIdFromEndpoint(starship))
+                      }
+                    ]}
+                  />
+                </>
+              )}
+              {props.type === DataType.planets && (
+                <>
+                  <CardContentChips
+                    chips={[
+                      { icon: <GroupsIcon/>, label: (data as IPlanetsData).population },
+                      {
+                        icon: <ThreeSixtyIcon/>,
+                        label: `${(data as IPlanetsData).rotation_period}h / ${(data as IPlanetsData).orbital_period}d`
+                      }
+                    ]}
+                  />
+                  <CardContentList
+                    items={[
+                      {
+                        type: DataType.people,
+                        icon: <GroupsIcon/>,
+                        ids: data.residents?.map((resident: string) => getIdFromEndpoint(resident))
+                      }
+                    ]}
+                  />
+                </>
+              )}
+              {props.type === DataType.starships && (
+                <>
+                  <CardContentChips
+                    chips={[
+                      { icon: <InfoIcon/>, label: (data as IStarshipsData).starship_class },
+                      { icon: <FactoryIcon/>, label: (data as IStarshipsData).manufacturer },
+                      { icon: <SpeedIcon/>, label: (data as IStarshipsData).max_atmosphering_speed },
+                      { icon: <LocalAtmIcon/>, label: (data as IStarshipsData).cost_in_credits }
+                    ]}
+                  />
+                  <CardContentList
+                    items={[
+                      {
+                        type: DataType.people,
+                        icon: <PersonIcon/>,
+                        ids: data.pilots?.map((pilot: string) => getIdFromEndpoint(pilot))
+                      }
+                    ]}
+                  />
+                </>
+              )}
+            </CardContent>
+            <CardActions>
+              <IconButton
+                sx={{ marginLeft: 'auto' }}
+                size="large"
+                aria-label={`${favourite ? 'remove' : 'add'} favorite`}
+                onClick={() => toggleFavourite(favourite, { ...data, id: params[`${props.type}Id`] })}
+              >
+                <FavoriteIcon sx={{ color: favourite ? red[500] : 'inherit' }}/>
+              </IconButton>
+            </CardActions>
+          </Card>
+        </Fade>
       )}
     </section>
   )

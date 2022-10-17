@@ -14,6 +14,7 @@ import CardContent from '@mui/material/CardContent'
 import CardHeader from '@mui/material/CardHeader'
 import Chip from '@mui/material/Chip'
 import CircularProgress from '@mui/material/CircularProgress'
+import Fade from '@mui/material/Fade'
 import Grid from '@mui/material/Grid'
 import IconButton from '@mui/material/IconButton'
 import Link from '@mui/material/Link'
@@ -159,74 +160,76 @@ function List (props: { type: DataType }): JSX.Element {
               )}
             </fieldset>
           )}
-          {!isLoading && !isFetching && items.filter(filterFn).length > 0 && (
-            <Grid container spacing={3}>
-              {items.filter(filterFn).map((item: ItemDataType, i: number) => {
-                const id = getIdFromEndpoint(item.url)
-                const favourite = isFavourite(props.type, id)
-                return (
-                  <Grid item key={i} xs={12} sm={6}>
-                    <Card>
-                      <CardHeader
-                        avatar={
-                          <Avatar sx={{ width: 46, height: 46 }} variant="square">
-                            {props.type === DataType.people && <PersonIcon sx={{ width: 40, height: 40 }}/>}
-                            {props.type === DataType.planets && <PublicIcon sx={{ width: 40, height: 40 }}/>}
-                            {props.type === DataType.starships && <RocketLaunchIcon sx={{ width: 40, height: 40 }}/>}
-                          </Avatar>
-                        }
-                        title={<Typography variant="h6">{item.name}</Typography>}
-                      />
-                      <CardContent sx={{ paddingTop: 0, paddingBottom: 0 }}>
-                        {props.type === DataType.people && (
-                          <CardContentChips
-                            chips={[
-                              { icon: <WcIcon/>, label: (item as IPeopleData).gender },
-                              { icon: <HeightIcon/>, label: (item as IPeopleData).height },
-                              { icon: <ScaleIcon/>, label: (item as IPeopleData).mass }
-                            ]}
-                          />
-                        )}
-                        {props.type === DataType.planets && (
-                          <CardContentChips
-                            chips={[
-                              { icon: <GroupsIcon/>, label: (item as IPlanetsData).population },
-                              {
-                                icon: <ThreeSixtyIcon/>,
-                                label: `${(item as IPlanetsData).rotation_period}h /${(item as IPlanetsData).orbital_period}d`
-                              }
-                            ]}
-                          />
-                        )}
-                        {props.type === DataType.starships && (
-                          <CardContentChips
-                            chips={[
-                              { icon: <InfoIcon/>, label: (item as IStarshipsData).starship_class },
-                              { icon: <SpeedIcon/>, label: (item as IStarshipsData).max_atmosphering_speed }
-                            ]}
-                          />
-                        )}
-                      </CardContent>
-                      <CardActions sx={{ margin: '0 4px' }}>
-                        <Button
-                          sx={{ marginRight: 'auto' }}
-                          size="small"
-                          onClick={() => navigate(`/${props.type}/${id}`)}
-                        >
-                          See more
-                        </Button>
-                        <IconButton
-                          aria-label={`${favourite ? 'remove' : 'add'} favorite`}
-                          onClick={() => toggleFavourite(favourite, { ...item, id })}
-                        >
-                          <FavoriteIcon sx={{ color: favourite ? red[500] : 'inherit' }}/>
-                        </IconButton>
-                      </CardActions>
-                    </Card>
-                  </Grid>
-                )
-              })}
-            </Grid>
+          {!isFetching && items.filter(filterFn).length > 0 && (
+            <Fade in={!isLoading}>
+              <Grid container spacing={3}>
+                {items.filter(filterFn).map((item: ItemDataType, i: number) => {
+                  const id = getIdFromEndpoint(item.url)
+                  const favourite = isFavourite(props.type, id)
+                  return (
+                    <Grid item key={i} xs={12} sm={6}>
+                      <Card>
+                        <CardHeader
+                          avatar={
+                            <Avatar sx={{ width: 46, height: 46 }} variant="square">
+                              {props.type === DataType.people && <PersonIcon sx={{ width: 40, height: 40 }}/>}
+                              {props.type === DataType.planets && <PublicIcon sx={{ width: 40, height: 40 }}/>}
+                              {props.type === DataType.starships && <RocketLaunchIcon sx={{ width: 40, height: 40 }}/>}
+                            </Avatar>
+                          }
+                          title={<Typography variant="h6">{item.name}</Typography>}
+                        />
+                        <CardContent sx={{ paddingTop: 0, paddingBottom: 0 }}>
+                          {props.type === DataType.people && (
+                            <CardContentChips
+                              chips={[
+                                { icon: <WcIcon/>, label: (item as IPeopleData).gender },
+                                { icon: <HeightIcon/>, label: (item as IPeopleData).height },
+                                { icon: <ScaleIcon/>, label: (item as IPeopleData).mass }
+                              ]}
+                            />
+                          )}
+                          {props.type === DataType.planets && (
+                            <CardContentChips
+                              chips={[
+                                { icon: <GroupsIcon/>, label: (item as IPlanetsData).population },
+                                {
+                                  icon: <ThreeSixtyIcon/>,
+                                  label: `${(item as IPlanetsData).rotation_period}h /${(item as IPlanetsData).orbital_period}d`
+                                }
+                              ]}
+                            />
+                          )}
+                          {props.type === DataType.starships && (
+                            <CardContentChips
+                              chips={[
+                                { icon: <InfoIcon/>, label: (item as IStarshipsData).starship_class },
+                                { icon: <SpeedIcon/>, label: (item as IStarshipsData).max_atmosphering_speed }
+                              ]}
+                            />
+                          )}
+                        </CardContent>
+                        <CardActions sx={{ margin: '0 4px' }}>
+                          <Button
+                            sx={{ marginRight: 'auto' }}
+                            size="small"
+                            onClick={() => navigate(`/${props.type}/${id}`)}
+                          >
+                            See more
+                          </Button>
+                          <IconButton
+                            aria-label={`${favourite ? 'remove' : 'add'} favorite`}
+                            onClick={() => toggleFavourite(favourite, { ...item, id })}
+                          >
+                            <FavoriteIcon sx={{ color: favourite ? red[500] : 'inherit' }}/>
+                          </IconButton>
+                        </CardActions>
+                      </Card>
+                    </Grid>
+                  )
+                })}
+              </Grid>
+            </Fade>
           )}
           <nav>
             <Typography sx={{ display: 'inline', marginRight: 'auto' }} variant="subtitle1">

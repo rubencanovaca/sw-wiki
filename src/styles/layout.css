@@ -1,7 +1,8 @@
 #root {
   display: flex;
   flex-direction: column;
-  min-width: 400px;
+  min-width: 360px;
+  min-height: 100vh;
 }
 
 header,
@@ -24,14 +25,14 @@ footer {
 header {
   font-size: calc(8px + 2vmin);
   justify-content: start;
-  min-height: calc(52px + 2vmin);
+  min-height: calc(46px + 2vh);
   padding: 0 1rem;
 }
 
 main {
   background-color: #282c34;
   flex-direction: column;
-  min-height: calc(100vh - 52px - 10vmin);
+  min-height: calc(100vh - 52px - 9vh);
   padding: 4px 16px 16px;
 }
 
@@ -87,9 +88,9 @@ main section > nav {
 footer {
   align-items: flex-end;
   flex: 1;
-  font-size: calc(4px + 1vmin);
+  font-size: calc(6px + 1vmin);
   gap: .5rem;
   justify-content: center;
-  min-height: 6vmin;
-  padding: 1vmin 0;
+  min-height: 4vh;
+  padding-bottom: 1vh;
 }
