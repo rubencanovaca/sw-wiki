@@ -80,7 +80,7 @@ const ListItemLink = function (props: { type: DataType, id: string }): JSX.Eleme
 
   return (
     <Link
-      sx={{ cursor: 'pointer', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+      sx={{ cursor: 'pointer', padding: '4px 0 0', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
       onClick={() => navigate(`/${props.type}/${props.id}`)}
     >
       {isSuccess ? data.name : <Skeleton variant="text" animation="wave" width={210}/>}
