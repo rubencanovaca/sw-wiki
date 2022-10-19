@@ -95,7 +95,7 @@ const CardContentList = function (props: { items: Array<{ type: DataType, icon: 
         <List key={i} sx={{ bgcolor: 'background.paper', width: '100%' }}>
           {item.ids?.length > 0 && (
             <>
-              {i !== 0 && <Divider sx={{ margin: '6px 0' }}/>}
+              {i !== 0 && <Divider sx={{ margin: '-12px 0 6px' }}/>}
               <ListItem alignItems="flex-start">
                 <ListItemAvatar>
                   <Avatar>{item.icon}</Avatar>
@@ -165,7 +165,7 @@ function Bio (props: { type: DataType }): JSX.Element {
                   {props.type === DataType.starships && <RocketLaunchTwoToneIcon sx={{ width: 60, height: 60 }}/>}
                 </Avatar>
               }
-              title={<Typography variant="h4">{data.name}</Typography>}
+              title={<Typography variant="h5">{data.name}</Typography>}
             />
             <CardContent>
               {props.type === DataType.people && (
