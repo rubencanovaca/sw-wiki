@@ -65,6 +65,7 @@ const CardContentChips = function (props: { chips: Array<{ icon: any, label: str
 function List (props: { type: DataType }): JSX.Element {
   const navigate = useNavigate()
   const { searchParam, setSearchParam } = useContext(LocalDataContext)
+  const isSearchMode = searchParam !== ''
 
   const {
     page,
@@ -77,12 +78,12 @@ function List (props: { type: DataType }): JSX.Element {
     removeFavourite
   } = useContext(LocalDataContext)
 
-  const currentPageType = isSearchMode() ? 'search' : 'list'
+  const currentPageType = isSearchMode ? 'search' : 'list'
   const currentPage = page[props.type][currentPageType]
 
   const { data, error, isError, isLoading, isFetching, isSuccess } = useQuery(
-    [`${props.type}${isSearchMode() ? `/search=${searchParam?.toLowerCase()}` : ''}`, currentPage],
-    isSearchMode()
+    [`${props.type}${isSearchMode ? `/search=${searchParam?.toLowerCase()}` : ''}`, currentPage],
+    isSearchMode
       ? async () => await Service.findByName(props.type, currentPage, searchParam)
       : async () => await Service.getAll(props.type, currentPage),
     { keepPreviousData: true, staleTime: 600000 }
@@ -97,10 +98,6 @@ function List (props: { type: DataType }): JSX.Element {
       setItems(data.results)
     }
   }, [data, favourites, showFavourites, page])
-
-  function isSearchMode (): boolean {
-    return searchParam !== ''
-  }
 
   function filterFn (f: ItemDataType): boolean {
     return showFavourites ? f.name.toLowerCase().includes(searchParam.toLowerCase()) : true
@@ -140,7 +137,7 @@ function List (props: { type: DataType }): JSX.Element {
       )}
       {isSuccess && (
         <>
-          {(showFavourites || isSearchMode()) && (
+          {(showFavourites || isSearchMode) && (
             <fieldset>
               {showFavourites && (
                 <Chip
@@ -150,7 +147,7 @@ function List (props: { type: DataType }): JSX.Element {
                   onDelete={() => setShowFavourites(false)}
                 />
               )}
-              {isSearchMode() && (
+              {isSearchMode && (
                 <Chip
                   label={searchParam}
                   color="primary"

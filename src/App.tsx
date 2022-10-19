@@ -46,7 +46,7 @@ function App (): JSX.Element {
       planets: { ...page.people, search: 1 },
       starships: { ...page.people, search: 1 }
     })
-    setSearchParam(searchText)
+    setSearchParam(searchText.trim())
   }
 
   return (
