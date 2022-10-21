@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { Fragment, useContext } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 
@@ -91,11 +91,11 @@ const ListItemLink = function (props: { type: DataType, id: string }): JSX.Eleme
 const CardContentList = function (props: { items: Array<{ type: DataType, icon: any, ids: string[] }> }): JSX.Element {
   return (
     <>
-      {props.items.some(item => item.ids?.length > 0) && props.items.map((item, i) => (
-        <List key={i} sx={{ bgcolor: 'background.paper', width: '100%' }}>
-          {item.ids?.length > 0 && (
-            <>
-              {i !== 0 && <Divider sx={{ margin: '-12px 0 6px' }}/>}
+      {props.items.some(item => item.ids?.length > 0) && (
+        <List sx={{ bgcolor: 'background.paper', padding: '4px 0', width: '100%' }}>
+          {props.items.map((item, i) => item.ids?.length > 0 && (
+            <Fragment key={i}>
+              {i > 0 && props.items[i - 1]?.ids.length > 0 && <Divider sx={{ margin: '4px 0 6px' }}/>}
               <ListItem alignItems="flex-start">
                 <ListItemAvatar>
                   <Avatar>{item.icon}</Avatar>
@@ -111,10 +111,10 @@ const CardContentList = function (props: { items: Array<{ type: DataType, icon: 
                   )}
                 />
               </ListItem>
-            </>
-          )}
+            </Fragment>
+          ))}
         </List>
-      ))}
+      )}
     </>
   )
 }
