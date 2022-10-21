@@ -40,11 +40,15 @@ import { getIdFromEndpoint } from '../api/utils'
 
 import { LocalDataContext } from '../providers/LocalDataProvider'
 
+import theme from '../styles/theme'
+
 import DataType from '../types/DataType'
 import ItemDataType from '../types/ItemDataType'
 import IPeopleData from '../types/IPeopleData'
 import IPlanetsData from '../types/IPlanetsData'
 import IStarshipsData from '../types/IStarshipsData'
+
+import Highlight from './Highlight'
 
 const CardContentChips = function (props: { chips: Array<{ icon: any, label: string }> }): JSX.Element {
   return (
@@ -174,7 +178,16 @@ function List (props: { type: DataType }): JSX.Element {
                               {props.type === DataType.starships && <RocketLaunchIcon sx={{ width: 40, height: 40 }}/>}
                             </Avatar>
                           }
-                          title={<Typography variant="h6">{item.name}</Typography>}
+                          title={(
+                            <Typography variant="h6">
+                              <Highlight text={item.name} search={searchParam}/>
+                            </Typography>
+                          )}
+                          subheader={props.type === DataType.starships && (
+                            <Typography variant="body1" color={theme.palette.text.secondary}>
+                              <Highlight text={(item as IStarshipsData).model} search={searchParam}/>
+                            </Typography>
+                          )}
                         />
                         <CardContent sx={{ paddingTop: 0, paddingBottom: 0 }}>
                           {props.type === DataType.people && (

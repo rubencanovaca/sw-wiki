@@ -54,6 +54,8 @@ import IPlanetsData from '../types/IPlanetsData'
 import IStarshipsData from '../types/IStarshipsData'
 import ItemDataType from '../types/ItemDataType'
 
+import theme from '../styles/theme'
+
 const CardContentChips = function (props: { chips: Array<{ icon: any, label: string }> }): JSX.Element {
   return (
     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, marginBottom: 4 }}>
@@ -166,6 +168,11 @@ function Bio (props: { type: DataType }): JSX.Element {
                 </Avatar>
               }
               title={<Typography variant="h5">{data.name}</Typography>}
+              subheader={props.type === DataType.starships && (
+                <Typography variant="body1" color={theme.palette.text.secondary}>
+                  {data.model}
+                </Typography>
+              )}
             />
             <CardContent>
               {props.type === DataType.people && (
