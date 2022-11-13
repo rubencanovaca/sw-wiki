@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { Fragment, useContext } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 
@@ -54,6 +54,8 @@ import IPlanetsData from '../types/IPlanetsData'
 import IStarshipsData from '../types/IStarshipsData'
 import ItemDataType from '../types/ItemDataType'
 
+import theme from '../styles/theme'
+
 const CardContentChips = function (props: { chips: Array<{ icon: any, label: string }> }): JSX.Element {
   return (
     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, marginBottom: 4 }}>
@@ -91,11 +93,11 @@ const ListItemLink = function (props: { type: DataType, id: string }): JSX.Eleme
 const CardContentList = function (props: { items: Array<{ type: DataType, icon: any, ids: string[] }> }): JSX.Element {
   return (
     <>
-      {props.items.some(item => item.ids?.length > 0) && props.items.map((item, i) => (
-        <List key={i} sx={{ bgcolor: 'background.paper', width: '100%' }}>
-          {item.ids?.length > 0 && (
-            <>
-              {i !== 0 && <Divider sx={{ margin: '6px 0' }}/>}
+      {props.items.some(item => item.ids?.length > 0) && (
+        <List sx={{ bgcolor: 'background.paper', padding: '4px 0', width: '100%' }}>
+          {props.items.map((item, i) => item.ids?.length > 0 && (
+            <Fragment key={i}>
+              {i > 0 && props.items[i - 1]?.ids.length > 0 && <Divider sx={{ margin: '4px 0 6px' }}/>}
               <ListItem alignItems="flex-start">
                 <ListItemAvatar>
                   <Avatar>{item.icon}</Avatar>
@@ -111,10 +113,10 @@ const CardContentList = function (props: { items: Array<{ type: DataType, icon: 
                   )}
                 />
               </ListItem>
-            </>
-          )}
+            </Fragment>
+          ))}
         </List>
-      ))}
+      )}
     </>
   )
 }
@@ -165,7 +167,12 @@ function Bio (props: { type: DataType }): JSX.Element {
                   {props.type === DataType.starships && <RocketLaunchTwoToneIcon sx={{ width: 60, height: 60 }}/>}
                 </Avatar>
               }
-              title={<Typography variant="h4">{data.name}</Typography>}
+              title={<Typography variant="h5">{data.name}</Typography>}
+              subheader={props.type === DataType.starships && (
+                <Typography variant="body1" color={theme.palette.text.secondary}>
+                  {data.model}
+                </Typography>
+              )}
             />
             <CardContent>
               {props.type === DataType.people && (

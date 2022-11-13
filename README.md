@@ -6,6 +6,9 @@ A SPA with client-side caching, state management, and favorites functionality.
 #### Stack
 React + TypeScript + React Router + Axios + React Query + Material UI + Jest + ESLint.
 
+#### Demo
+[<img src="http://sw-wiki.rubencanovaca.com/favicon.ico" width="50">](http://sw-wiki.rubencanovaca.com)
+
 ### Available Scripts
 
 In the project directory, you can run:
@@ -39,5 +42,5 @@ Launches the ESLint check and tries to fix errors.
 
 ## TODO:
 
-- Add greater coverage with unit tests
-- Make data persistent in the browser (LocalStorage)
+- Add better unit tests coverage
+- Make local data persistent on the browser (local storage)

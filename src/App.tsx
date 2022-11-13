@@ -46,7 +46,7 @@ function App (): JSX.Element {
       planets: { ...page.people, search: 1 },
       starships: { ...page.people, search: 1 }
     })
-    setSearchParam(searchText)
+    setSearchParam(searchText.trim())
   }
 
   return (
@@ -65,7 +65,10 @@ function App (): JSX.Element {
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter') onSearchParam()
+                  if (e.key === 'Enter') {
+                    e.preventDefault()
+                    onSearchParam()
+                  }
                 }}
               />
               <IconButton
@@ -73,6 +76,7 @@ function App (): JSX.Element {
                 type="button"
                 size="small"
                 aria-label="clear"
+                color="primary"
                 onClick={() => {
                   setSearchText('')
                   inputRef.current?.focus()
@@ -84,6 +88,7 @@ function App (): JSX.Element {
             <IconButton
               type="button"
               aria-label="search"
+              color="primary"
               onClick={() => onSearchParam()}
             >
               <SearchIcon/>
